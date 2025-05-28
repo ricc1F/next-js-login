@@ -43,7 +43,7 @@ export async function cadastro(req, res) {
     const { tipo_usuario } = req.body
 
     if (tipo_usuario === 'aluno') {
-      const { nome_aluno, email, senha, idade, endereco_aluno, nome_escola } = req.body
+      const { nome_aluno, email, senha, idade, endereco_aluno, nome_escola, tipo_usuario } = req.body
       const [userExist] = await db.execute('SELECT * FROM aluno WHERE email = ?', [email])
       if (userExist.length > 0) return res.status(400).json('Usuário já cadastrado')
 

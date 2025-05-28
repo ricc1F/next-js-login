@@ -11,7 +11,8 @@ export default function CadastroPage() {
     senha: '',
     idade: '',
     endereco_aluno: '',
-    nome_escola: ''
+    nome_escola: '',
+    tipo_usuario: ''
   })
 
   const [error, setError] = useState('')
@@ -51,6 +52,17 @@ export default function CadastroPage() {
         <Input placeholder="Idade" value={form.idade} onChange={(e) => handleChange(e, 'idade')} />
         <Input placeholder="Endereço" value={form.endereco_aluno} onChange={(e) => handleChange(e, 'endereco_aluno')} />
         <Input placeholder="Escola" value={form.nome_escola} onChange={(e) => handleChange(e, 'nome_escola')} />
+
+        <select
+          className={styles.input} // ou outro estilo se preferir
+          value={form.tipo_usuario}
+          onChange={(e) => handleChange(e, 'tipo_usuario')}
+        >
+          <option value="">Selecione o tipo de usuário</option>
+          <option value="aluno">Aluno</option>
+          <option value="empresa">Empresa</option>
+        </select>
+
         <Button type="submit">Cadastrar</Button>
         {error && <p className={styles.error}>{error}</p>}
       </form>

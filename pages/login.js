@@ -12,7 +12,8 @@ import Button from '../src/components/forms/button/button'
 export default function LoginPage() {
   const [form, setForm] = useState({
     email: '',
-    password: ''
+    password: '',
+    tipo_usuario: ''
   })
   const [error, setError] = useState('')
   const router = useRouter()
@@ -37,9 +38,10 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: form.email,
-          senha: form.password
+          senha: form.password,
+          tipo_usuario: form.tipo_usuario
         })
-      })
+      })      
 
       const data = await response.json()
 
@@ -71,6 +73,17 @@ export default function LoginPage() {
             onChange={(event) => handleChangeForm(event, 'password')}
           />
           
+          <select
+            className={styles.select}
+            value={form.tipo_usuario}
+            onChange={(event) => handleChangeForm(event, 'tipo_usuario')}
+            required
+          >
+            <option value="">Selecione o tipo de usuário</option>
+            <option value="aluno">Aluno</option>
+            <option value="empresa">Empresa</option>
+          </select>
+
           <Button type="submit">Entrar</Button>
           {error && <p className={styles.error}>{error}</p>}
           <Link href="/cadastro">Não possui uma conta?</Link>
