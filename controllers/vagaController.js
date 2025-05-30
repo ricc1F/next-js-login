@@ -2,17 +2,31 @@ import { connect } from '../config/db.js'
 
 // Criar vaga
 export async function criarVaga(req, res) {
-  const { tipo_vaga, descricao, id_empresa } = req.body
+  const {
+    tipo_vaga,
+    descricao,
+    area,
+    salario,
+    endereco,
+    atividades,
+    requisitos,
+    horario,
+    caracteristica,
+    id_empresa
+  } = req.body
 
-  if (!tipo_vaga || !id_empresa) {
-    return res.status(400).json({ error: 'Campos obrigatórios: tipo_vaga e id_empresa' })
+  if (!tipo_vaga || !descricao || !area || !salario || !endereco || !atividades || !requisitos || !horario || !caracteristica || !id_empresa) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios' })
   }
 
   try {
     const db = await connect()
     await db.execute(
-      'INSERT INTO vagas (tipo_vaga, descricao, id_empresa) VALUES (?, ?, ?)',
-      [tipo_vaga, descricao, id_empresa]
+      `INSERT INTO vagas (
+        tipo_vaga, descricao, area, salario, endereco,
+        atividades, requisitos, horario, caracteristica, id_empresa
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [tipo_vaga, descricao, area, salario, endereco, atividades, requisitos, horario, caracteristica, id_empresa]
     )
     res.status(201).json({ message: 'Vaga criada com sucesso' })
   } catch (err) {
@@ -27,7 +41,7 @@ export async function listarVagas(req, res) {
     const [vagas] = await db.execute(
       `SELECT v.*, e.nome_empresa 
        FROM vagas v 
-       JOIN empresa e ON v.id_empresa = e.nome_empresa`
+       JOIN empresa e ON v.id_empresa = e.id`
     )
     res.status(200).json(vagas)
   } catch (err) {
@@ -54,29 +68,63 @@ export async function buscarVagaPorId(req, res) {
 // Editar vaga
 export async function editarVaga(req, res) {
   const { id } = req.query
-  const { tipo_vaga, descricao } = req.body
+  const {
+    tipo_vaga,
+    descricao,
+    area,
+    salario,
+    endereco,
+    atividades,
+    requisitos,
+    horario,
+    caracteristica
+  } = req.body
+
+  if (!id) return res.status(400).json({ error: 'ID da vaga não informado' })
 
   try {
     const db = await connect()
-    await db.execute(
-      'UPDATE vagas SET tipo_vaga = ?, descricao = ? WHERE vagas_id = ?',
-      [tipo_vaga, descricao, id]
+    const [result] = await db.execute(
+      `UPDATE vagas SET
+        tipo_vaga = ?, descricao = ?, area = ?, salario = ?, endereco = ?,
+        atividades = ?, requisitos = ?, horario = ?, caracteristica = ?
+       WHERE vagas_id = ?`,
+      [tipo_vaga, descricao, area, salario, endereco, atividades, requisitos, horario, caracteristica, id]
     )
+
+    console.log('Update result:', result)
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Vaga não encontrada para atualizar' })
+    }
+
     res.status(200).json({ message: 'Vaga atualizada com sucesso' })
   } catch (err) {
     res.status(500).json({ error: 'Erro ao atualizar vaga', detail: err.message })
   }
 }
 
+
 // Deletar vaga
 export async function deletarVaga(req, res) {
   const { id } = req.query
+  console.log('Tentando deletar vaga ID:', id)
+
+  if (!id) return res.status(400).json({ error: 'ID da vaga não informado' })
 
   try {
     const db = await connect()
-    await db.execute('DELETE FROM vagas WHERE vagas_id = ?', [id])
+    const [result] = await db.execute('DELETE FROM vagas WHERE vagas_id = ?', [id])
+
+    console.log('Resultado da exclusão:', result)
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Vaga não encontrada para deletar' })
+    }
+
     res.status(200).json({ message: 'Vaga deletada com sucesso' })
   } catch (err) {
+    console.error('Erro ao excluir vaga:', err)
     res.status(500).json({ error: 'Erro ao deletar vaga', detail: err.message })
   }
 }

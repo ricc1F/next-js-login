@@ -1,17 +1,10 @@
-import {
-    buscarVagaPorId,
-    editarVaga,
-    deletarVaga
-  } from '../../../controllers/vagaController'
-  
-  export default async function handler(req, res) {
-    if (req.method === 'GET') {
-      return buscarVagaPorId(req, res)
-    } else if (req.method === 'PUT') {
-      return editarVaga(req, res)
-    } else if (req.method === 'DELETE') {
-      return deletarVaga(req, res)
-    } else {
-      res.status(405).json({ error: 'Método não permitido' })
-    }
-  }  
+import { deletarVaga } from '../../../controllers/vagaController.js'
+
+export default async function handler(req, res) {
+  if (req.method === 'DELETE') {
+    return deletarVaga(req, res)
+  }
+
+  res.setHeader('Allow', ['DELETE'])
+  res.status(405).end(`Method ${req.method} Not Allowed`)
+}

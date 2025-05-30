@@ -43,7 +43,12 @@ export async function cadastro(req, res) {
     const { tipo_usuario } = req.body
 
     if (tipo_usuario === 'aluno') {
-      const { nome_aluno, email, senha, idade, endereco_aluno, nome_escola, tipo_usuario } = req.body
+      const { nome_aluno, email, senha, idade, endereco_aluno, nome_escola } = req.body
+
+      if (!nome_aluno || !email || !senha || !idade || !endereco_aluno || !nome_escola) {
+        return res.status(400).json({ error: 'Todos os campos do aluno são obrigatórios' })
+      }
+
       const [userExist] = await db.execute('SELECT * FROM aluno WHERE email = ?', [email])
       if (userExist.length > 0) return res.status(400).json('Usuário já cadastrado')
 
@@ -60,8 +65,13 @@ export async function cadastro(req, res) {
 
     } else if (tipo_usuario === 'empresa') {
       const { nome_empresa, email_empresa, senha, endereco_empresa } = req.body
+
+      if (!nome_empresa || !email_empresa || !senha || !endereco_empresa) {
+        return res.status(400).json({ error: 'Todos os campos da empresa são obrigatórios' })
+      }
+
       const [empresaExist] = await db.execute('SELECT * FROM empresa WHERE email_empresa = ?', [email_empresa])
-      if (empresaExist.length > 0) return res.status(400).json('Empresa ja cadastrada')
+      if (empresaExist.length > 0) return res.status(400).json('Empresa já cadastrada')
 
       const senhaHash = await bcrypt.hash(senha, 10)
 
@@ -77,7 +87,7 @@ export async function cadastro(req, res) {
 
     res.status(400).json({ error: 'tipo_usuario inválido' })
   } catch (err) {
-    console.error(err)
+    console.error('Erro ao cadastrar:', err)
     res.status(500).json(err.message)
   }
 }

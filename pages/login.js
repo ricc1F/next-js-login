@@ -2,12 +2,9 @@ import { useState } from 'react'
 import { setCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { jwtDecode } from 'jwt-decode'
 
 import styles from '../styles/Login.module.css'
-
-import LoginCard from '../src/components/cards/loginCard/login'
-import Input from '../src/components/forms/input/input'
-import Button from '../src/components/forms/button/button'
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -15,6 +12,7 @@ export default function LoginPage() {
     password: '',
     tipo_usuario: ''
   })
+
   const [error, setError] = useState('')
   const router = useRouter()
 
@@ -30,6 +28,7 @@ export default function LoginPage() {
 
     if (!form.email) return setError('O e-mail é obrigatório')
     if (!form.password) return setError('A senha é obrigatória')
+    if (!form.tipo_usuario) return setError('Selecione o tipo de usuário')
 
     setError('')
     try {
@@ -41,54 +40,67 @@ export default function LoginPage() {
           senha: form.password,
           tipo_usuario: form.tipo_usuario
         })
-      })      
+      })
 
       const data = await response.json()
 
       if (response.status !== 200) {
-        throw new Error(typeof data === 'string' ? data : data.error || 'Erro desconhecido')
+        throw new Error(data.error || JSON.stringify(data))
+        (typeof data === 'string' ? data : data.error || 'Erro desconhecido')
       }
 
       setCookie('authorization', data)
-      router.push('/')
+      const decoded = jwtDecode(data)
+
+      if (decoded.tipo === 'empresa') {
+        router.push('/empresa/dashboard')
+      } else {
+        router.push('/aluno/perfil')
+      }
+
     } catch (err) {
       setError(err.message || 'Erro ao fazer login')
     }
   }
 
   return (
-    <div className={styles.background}>
-      <LoginCard title="Faça seu login">
+    <div className={styles.container}>
+      <div className={styles.loginBox}>
+        <h2 className={styles.title}>Login</h2>
         <form className={styles.form} onSubmit={handleForm}>
-          <Input
+          <input
+            className={styles.input}
             type="email"
-            placeholder="Seu e-mail"
+            placeholder="Email"
             value={form.email}
             onChange={(event) => handleChangeForm(event, 'email')}
           />
-          <Input
+          <input
+            className={styles.input}
             type="password"
-            placeholder="Sua senha"
+            placeholder="Senha"
             value={form.password}
             onChange={(event) => handleChangeForm(event, 'password')}
           />
-          
           <select
             className={styles.select}
             value={form.tipo_usuario}
             onChange={(event) => handleChangeForm(event, 'tipo_usuario')}
             required
           >
-            <option value="">Selecione o tipo de usuário</option>
+            <option value="">Tipo de usuário</option>
             <option value="aluno">Aluno</option>
             <option value="empresa">Empresa</option>
           </select>
 
-          <Button type="submit">Entrar</Button>
           {error && <p className={styles.error}>{error}</p>}
-          <Link href="/cadastro">Não possui uma conta?</Link>
+
+          <button className={styles.button} type="submit">Entrar</button>
+          <p className={styles.link}>
+            <Link href="/cadastro">Não possui uma conta? Cadastre-se</Link>
+          </p>
         </form>
-      </LoginCard>
+      </div>
     </div>
   )
 }
