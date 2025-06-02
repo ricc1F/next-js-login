@@ -6,7 +6,17 @@ import { useRouter } from 'next/router'
 export default function DashboardEmpresa() {
   const [empresa, setEmpresa] = useState(null)
   const [vagas, setVagas] = useState([])
-  const [form, setForm] = useState({ tipo_vaga: '', descricao: '' })
+  const [form, setForm] = useState({
+    tipo_vaga: '',
+    descricao: '',
+    area: '',
+    salario: '',
+    endereco: '',
+    atividades: '',
+    requisitos: '',
+    horario: '',
+    caracteristica: ''
+  })
   const [editandoId, setEditandoId] = useState(null)
   const router = useRouter()
 
@@ -40,24 +50,47 @@ export default function DashboardEmpresa() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!form.tipo_vaga) return alert('Preencha o tipo da vaga')
 
-    const url = editandoId ? `/api/vagas/${editandoId}` : '/api/vagas'
-    const method = editandoId ? 'PUT' : 'POST'
+    const camposObrigatorios = Object.entries(form)
+    const algumVazio = camposObrigatorios.some(([_, valor]) => !valor)
+
+    if (algumVazio) {
+      return alert('Preencha todos os campos obrigatórios')
+    }
 
     try {
-      const res = await fetch(url, {
-        method,
+      const res = await fetch('/api/vagas', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, id_empresa: empresa.id })
+        body: JSON.stringify({
+          ...form,
+          salario: parseFloat(form.salario),
+          id_empresa: empresa.id
+        })
       })
 
-      if (!res.ok) throw new Error('Erro ao salvar vaga')
-      setForm({ tipo_vaga: '', descricao: '' })
-      setEditandoId(null)
+      const data = await res.json()
+
+      if (!res.ok) {
+        console.error(data)
+        return alert(data.error || 'Erro ao criar vaga')
+      }
+
+      setForm({
+        tipo_vaga: '',
+        descricao: '',
+        area: '',
+        salario: '',
+        endereco: '',
+        atividades: '',
+        requisitos: '',
+        horario: '',
+        caracteristica: ''
+      })
       fetchVagas(empresa.id)
     } catch (err) {
-      alert(err.message)
+      console.error(err)
+      alert('Erro inesperado ao criar vaga')
     }
   }
 
@@ -74,8 +107,18 @@ export default function DashboardEmpresa() {
   }
 
   const handleEdit = (vaga) => {
-    setForm({ tipo_vaga: vaga.tipo_vaga, descricao: vaga.descricao || '' })
-    setEditandoId(vaga.vagas_id) // Aqui estava o erro
+    setForm({
+      tipo_vaga: vaga.tipo_vaga,
+      descricao: vaga.descricao || '',
+      area: vaga.area || '',
+      salario: vaga.salario || '',
+      endereco: vaga.endereco || '',
+      atividades: vaga.atividades || '',
+      requisitos: vaga.requisitos || '',
+      horario: vaga.horario || '',
+      caracteristica: vaga.caracteristica || ''
+    })
+    setEditandoId(vaga.vagas_id)
   }
 
   const handleLogout = () => {
@@ -86,51 +129,33 @@ export default function DashboardEmpresa() {
   if (!empresa) return <p>Carregando...</p>
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '800px', margin: 'auto' }}>
+    <div style={{ padding: '2rem', maxWidth: '900px', margin: 'auto' }}>
       <h1>Bem-vindo, {empresa.email}</h1>
-      <button
-        onClick={handleLogout}
-        style={{
-          marginBottom: '1rem',
-          padding: '8px 16px',
-          backgroundColor: '#dc3545',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
-        }}
-      >
-        Sair
-      </button>
+      <button onClick={handleLogout} style={{ marginBottom: '1rem' }}>Sair</button>
 
       <h2>{editandoId ? 'Editar Vaga' : 'Criar Nova Vaga'}</h2>
-      <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
-        <input
-          placeholder="Tipo da vaga"
-          value={form.tipo_vaga}
-          onChange={(e) => handleChange(e, 'tipo_vaga')}
-          style={{ padding: '8px', marginRight: '8px', width: '200px' }}
-        />
-        <input
-          placeholder="Descrição (opcional)"
-          value={form.descricao}
-          onChange={(e) => handleChange(e, 'descricao')}
-          style={{ padding: '8px', marginRight: '8px', width: '300px' }}
-        />
-        <button type="submit" style={{ padding: '8px 16px' }}>
-          {editandoId ? 'Atualizar' : 'Criar'}
-        </button>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <input placeholder="Tipo da vaga" value={form.tipo_vaga} onChange={(e) => handleChange(e, 'tipo_vaga')} />
+        <input placeholder="Descrição" value={form.descricao} onChange={(e) => handleChange(e, 'descricao')} />
+        <input placeholder="Área" value={form.area} onChange={(e) => handleChange(e, 'area')} />
+        <input placeholder="Salário" value={form.salario} onChange={(e) => handleChange(e, 'salario')} />
+        <input placeholder="Endereço" value={form.endereco} onChange={(e) => handleChange(e, 'endereco')} />
+        <input placeholder="Atividades" value={form.atividades} onChange={(e) => handleChange(e, 'atividades')} />
+        <input placeholder="Requisitos" value={form.requisitos} onChange={(e) => handleChange(e, 'requisitos')} />
+        <input placeholder="Horário" value={form.horario} onChange={(e) => handleChange(e, 'horario')} />
+        <input placeholder="Característica" value={form.caracteristica} onChange={(e) => handleChange(e, 'caracteristica')} />
+        <button type="submit">Criar</button>
       </form>
 
       <h2>Minhas Vagas</h2>
       <ul style={{ listStyle: 'none', padding: 0 }}>
         {vagas.length === 0 && <li>Nenhuma vaga cadastrada.</li>}
         {vagas.map((vaga) => (
-          <li key={vaga.vagas_id} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+          <li key={vaga.vagas_id} style={{ marginBottom: '1rem', borderBottom: '1px solid #ccc', paddingBottom: '1rem' }}>
             <strong>{vaga.tipo_vaga}</strong><br />
-            {vaga.descricao && <em>{vaga.descricao}</em>}<br />
-            <button onClick={() => handleEdit(vaga)} style={{ marginRight: '10px' }}>Editar</button>
-            <button onClick={() => handleDelete(vaga.vagas_id)} style={{ backgroundColor: '#dc3545', color: 'white' }}>Excluir</button>
+            <em>{vaga.descricao}</em><br />
+            <button onClick={() => handleEdit(vaga)}>Editar</button>
+            <button onClick={() => handleDelete(vaga.vagas_id)} style={{ marginLeft: '1rem' }}>Excluir</button>
           </li>
         ))}
       </ul>

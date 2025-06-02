@@ -1,6 +1,5 @@
 import { connect } from '../config/db.js'
 
-// Criar vaga
 export async function criarVaga(req, res) {
   const {
     tipo_vaga,
@@ -30,6 +29,7 @@ export async function criarVaga(req, res) {
     )
     res.status(201).json({ message: 'Vaga criada com sucesso' })
   } catch (err) {
+    console.error(err)
     res.status(500).json({ error: 'Erro ao criar vaga', detail: err.message })
   }
 }
