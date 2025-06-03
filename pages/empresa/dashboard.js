@@ -12,10 +12,10 @@ export default function DashboardEmpresa() {
     area: '',
     salario: '',
     endereco: '',
+    estado: '',
     atividades: '',
     requisitos: '',
-    horario: '',
-    caracteristica: ''
+    horario: ''
   })
   const [editandoId, setEditandoId] = useState(null)
   const router = useRouter()
@@ -54,9 +54,7 @@ export default function DashboardEmpresa() {
     const camposObrigatorios = Object.entries(form)
     const algumVazio = camposObrigatorios.some(([_, valor]) => !valor)
 
-    if (algumVazio) {
-      return alert('Preencha todos os campos obrigatórios')
-    }
+    if (algumVazio) return alert('Preencha todos os campos obrigatórios')
 
     try {
       const res = await fetch('/api/vagas', {
@@ -82,10 +80,10 @@ export default function DashboardEmpresa() {
         area: '',
         salario: '',
         endereco: '',
+        estado: '',
         atividades: '',
         requisitos: '',
         horario: '',
-        caracteristica: ''
       })
       fetchVagas(empresa.id)
     } catch (err) {
@@ -108,15 +106,15 @@ export default function DashboardEmpresa() {
 
   const handleEdit = (vaga) => {
     setForm({
-      tipo_vaga: vaga.tipo_vaga,
+      tipo_vaga: vaga.tipo_vaga || '',
       descricao: vaga.descricao || '',
       area: vaga.area || '',
       salario: vaga.salario || '',
       endereco: vaga.endereco || '',
+      estado: vaga.estado || '',
       atividades: vaga.atividades || '',
       requisitos: vaga.requisitos || '',
       horario: vaga.horario || '',
-      caracteristica: vaga.caracteristica || ''
     })
     setEditandoId(vaga.vagas_id)
   }
@@ -135,16 +133,29 @@ export default function DashboardEmpresa() {
 
       <h2>{editandoId ? 'Editar Vaga' : 'Criar Nova Vaga'}</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <input placeholder="Tipo da vaga" value={form.tipo_vaga} onChange={(e) => handleChange(e, 'tipo_vaga')} />
-        <input placeholder="Descrição" value={form.descricao} onChange={(e) => handleChange(e, 'descricao')} />
-        <input placeholder="Área" value={form.area} onChange={(e) => handleChange(e, 'area')} />
-        <input placeholder="Salário" value={form.salario} onChange={(e) => handleChange(e, 'salario')} />
-        <input placeholder="Endereço" value={form.endereco} onChange={(e) => handleChange(e, 'endereco')} />
-        <input placeholder="Atividades" value={form.atividades} onChange={(e) => handleChange(e, 'atividades')} />
-        <input placeholder="Requisitos" value={form.requisitos} onChange={(e) => handleChange(e, 'requisitos')} />
-        <input placeholder="Horário" value={form.horario} onChange={(e) => handleChange(e, 'horario')} />
-        <input placeholder="Característica" value={form.caracteristica} onChange={(e) => handleChange(e, 'caracteristica')} />
-        <button type="submit">Criar</button>
+        <select value={form.tipo_vaga} onChange={(e) => handleChange(e, 'tipo_vaga')} required>
+          <option value="">Tipo da vaga</option>
+          <option value="Estágio">Estágio</option>
+          <option value="Aprendiz">Aprendiz</option>
+          <option value="CLT">CLT</option>
+        </select>
+
+        <select value={form.area} onChange={(e) => handleChange(e, 'area')} required>
+          <option value="">Área</option>
+          <option value="Tecnologia">Tecnologia</option>
+          <option value="Enfermagem">Enfermagem</option>
+          <option value="Engenharia">Engenharia</option>
+          <option value="Administração">Administração</option>
+        </select>
+
+        <input placeholder="Descrição" value={form.descricao} onChange={(e) => handleChange(e, 'descricao')} required />
+        <input placeholder="Salário" value={form.salario} onChange={(e) => handleChange(e, 'salario')} required />
+        <input placeholder="Endereço" value={form.endereco} onChange={(e) => handleChange(e, 'endereco')} required />
+        <input placeholder="Estado" value={form.estado} onChange={(e) => handleChange(e, 'estado')} required />
+        <input placeholder="Atividades" value={form.atividades} onChange={(e) => handleChange(e, 'atividades')} required />
+        <input placeholder="Requisitos" value={form.requisitos} onChange={(e) => handleChange(e, 'requisitos')} required />
+        <input placeholder="Horário" value={form.horario} onChange={(e) => handleChange(e, 'horario')} required />
+        <button type="submit">{editandoId ? 'Atualizar' : 'Criar'}</button>
       </form>
 
       <h2>Minhas Vagas</h2>
