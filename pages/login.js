@@ -45,9 +45,8 @@ export default function LoginPage() {
       const data = await response.json()
 
       if (response.status !== 200) {
-        throw new Error(data.error || JSON.stringify(data))
-        (typeof data === 'string' ? data : data.error || 'Erro desconhecido')
-      }
+        throw new Error(typeof data === 'string' ? data : data.error || 'Erro desconhecido')
+      }      
 
       setCookie('authorization', data)
       const decoded = jwtDecode(data)

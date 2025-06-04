@@ -52,9 +52,11 @@ export default function DashboardEmpresa() {
     e.preventDefault()
 
     const camposObrigatorios = Object.entries(form)
-    const algumVazio = camposObrigatorios.some(([_, valor]) => !valor)
+    const algumVazio = camposObrigatorios.some(([_, valor]) => valor === '' || valor === null || valor === undefined)
 
-    if (algumVazio) return alert('Preencha todos os campos obrigatórios')
+    if (algumVazio) {
+      return alert('Preencha todos os campos obrigatórios')
+    }
 
     try {
       const res = await fetch('/api/vagas', {
@@ -83,7 +85,7 @@ export default function DashboardEmpresa() {
         estado: '',
         atividades: '',
         requisitos: '',
-        horario: '',
+        horario: ''
       })
       fetchVagas(empresa.id)
     } catch (err) {
@@ -114,7 +116,7 @@ export default function DashboardEmpresa() {
       estado: vaga.estado || '',
       atividades: vaga.atividades || '',
       requisitos: vaga.requisitos || '',
-      horario: vaga.horario || '',
+      horario: vaga.horario || ''
     })
     setEditandoId(vaga.vagas_id)
   }
@@ -140,6 +142,7 @@ export default function DashboardEmpresa() {
           <option value="CLT">CLT</option>
         </select>
 
+
         <select value={form.area} onChange={(e) => handleChange(e, 'area')} required>
           <option value="">Área</option>
           <option value="Tecnologia">Tecnologia</option>
@@ -148,8 +151,8 @@ export default function DashboardEmpresa() {
           <option value="Administração">Administração</option>
         </select>
 
-        <input placeholder="Descrição" value={form.descricao} onChange={(e) => handleChange(e, 'descricao')} required />
-        <input placeholder="Salário" value={form.salario} onChange={(e) => handleChange(e, 'salario')} required />
+        <input placeholder="Sobre a vaga" value={form.descricao} onChange={(e) => handleChange(e, 'descricao')} required />
+        <input placeholder="Salário em R$" value={form.salario} onChange={(e) => handleChange(e, 'salario')} required />
         <input placeholder="Endereço" value={form.endereco} onChange={(e) => handleChange(e, 'endereco')} required />
         <input placeholder="Estado" value={form.estado} onChange={(e) => handleChange(e, 'estado')} required />
         <input placeholder="Atividades" value={form.atividades} onChange={(e) => handleChange(e, 'atividades')} required />
@@ -160,15 +163,17 @@ export default function DashboardEmpresa() {
 
       <h2>Minhas Vagas</h2>
       <ul style={{ listStyle: 'none', padding: 0 }}>
-        {vagas.length === 0 && <li>Nenhuma vaga cadastrada.</li>}
-        {vagas.map((vaga) => (
-          <li key={vaga.vagas_id} style={{ marginBottom: '1rem', borderBottom: '1px solid #ccc', paddingBottom: '1rem' }}>
-            <strong>{vaga.tipo_vaga}</strong><br />
-            <em>{vaga.descricao}</em><br />
-            <button onClick={() => handleEdit(vaga)}>Editar</button>
-            <button onClick={() => handleDelete(vaga.vagas_id)} style={{ marginLeft: '1rem' }}>Excluir</button>
-          </li>
-        ))}
+        {Array.isArray(vagas) && vagas.length === 0 && <li>Nenhuma vaga cadastrada.</li>}
+        {Array.isArray(vagas) &&
+          vagas.map((vaga) => (
+            <li key={vaga.vagas_id} style={{ marginBottom: '1rem', borderBottom: '1px solid #ccc', paddingBottom: '1rem' }}>
+              <strong>{vaga.area}</strong><br />
+              <em>{vaga.descricao}</em><br />
+              <button onClick={() => handleEdit(vaga)}>Editar</button>
+              <button onClick={() => handleDelete(vaga.vagas_id)} style={{ marginLeft: '1rem' }}>Excluir</button>
+            </li>
+          ))}
+        {!Array.isArray(vagas) && <li>Erro ao carregar vagas</li>}
       </ul>
     </div>
   )

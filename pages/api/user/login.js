@@ -1,9 +1,9 @@
-import { login } from '../../../controllers/userController'
+import { login } from '../../../controllers/userController.js'
 
-export default async function handler(req, res) {
+export default function handler(req, res) {
   if (req.method === 'POST') {
-    return await login(req, res)
-  } else {
-    res.status(405).json({ error: 'Método não permitido' })
+    return login(req, res)
   }
+  res.setHeader('Allow', ['POST'])
+  res.status(405).end(`Method ${req.method} Not Allowed`)
 }
