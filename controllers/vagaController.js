@@ -3,51 +3,51 @@ import { connect } from '../config/db.js'
 // Criar vaga
 export async function criarVaga(req, res) {
   const {
-    tipo_vaga,
-    descricao,
+    titulo,
     area,
+    descricao,
     salario,
     endereco,
     estado,
     atividades,
     requisitos,
     horario,
+    tipoDeVaga,
     id_empresa
-  } = req.body
+  } = req.body;
 
-  if (
-    !tipo_vaga || !descricao || !area || !salario || !endereco ||
-    !estado || !atividades || !requisitos || !horario || !id_empresa
-  ) {
-    return res.status(400).json({ error: 'Todos os campos são obrigatórios' })
+  if (!titulo || !area || !descricao || !salario || !endereco || !estado || !atividades || !requisitos || !horario || !tipoDeVaga || !id_empresa) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
   }
 
   try {
-    const db = await connect()
+    const db = await connect();
     await db.execute(
       `INSERT INTO vagas (
-        tipo_vaga, descricao, area, salario, endereco, estado,
-        atividades, requisitos, horario, id_empresa
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        titulo, area, descricao, salario, endereco, estado,
+        atividades, requisitos, horario, tipoDeVaga, id_empresa
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        tipo_vaga,
-        descricao,
+        titulo,
         area,
+        descricao,
         salario,
         endereco,
         estado,
         atividades,
         requisitos,
         horario,
+        tipoDeVaga,
         id_empresa
       ]
-    )
-    res.status(201).json({ message: 'Vaga criada com sucesso' })
+    );
+    res.status(201).json({ message: 'Vaga criada com sucesso' });
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Erro ao criar vaga', detail: err.message })
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao criar vaga', detail: err.message });
   }
 }
+
 
 // Listar todas as vagas
 export async function listarVagas(req, res) {
@@ -84,51 +84,55 @@ export async function buscarVagaPorId(req, res) {
 
 // Editar vaga
 export async function editarVaga(req, res) {
-  const { id } = req.query
+  const { id } = req.query;
   const {
-    tipo_vaga,
-    descricao,
+    titulo,
     area,
+    descricao,
     salario,
     endereco,
     estado,
     atividades,
     requisitos,
-    horario
-  } = req.body
+    horario,
+    tipoDeVaga
+  } = req.body;
 
-  if (!id) return res.status(400).json({ error: 'ID da vaga não informado' })
+  if (!id) return res.status(400).json({ error: 'ID da vaga não informado' });
 
   try {
-    const db = await connect()
+    const db = await connect();
     const [result] = await db.execute(
-      `UPDATE vagas SET
-        tipo_vaga = ?, descricao = ?, area = ?, salario = ?, endereco = ?,
-        estado = ?, atividades = ?, requisitos = ?, horario = ?
+      `UPDATE vagas SET 
+        titulo = ?, area = ?, descricao = ?, salario = ?, endereco = ?, estado = ?, 
+        atividades = ?, requisitos = ?, horario = ?, tipoDeVaga = ?
        WHERE vagas_id = ?`,
       [
-        tipo_vaga,
-        descricao,
+        titulo,
         area,
+        descricao,
         salario,
         endereco,
         estado,
         atividades,
         requisitos,
         horario,
+        tipoDeVaga,
         id
       ]
-    )
+    );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Vaga não encontrada para atualizar' })
+      return res.status(404).json({ error: 'Vaga não encontrada para atualizar' });
     }
 
-    res.status(200).json({ message: 'Vaga atualizada com sucesso' })
+    res.status(200).json({ message: 'Vaga atualizada com sucesso' });
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao atualizar vaga', detail: err.message })
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao atualizar vaga', detail: err.message });
   }
 }
+
 
 // Deletar vaga
 export async function deletarVaga(req, res) {
