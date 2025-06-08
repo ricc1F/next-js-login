@@ -1,12 +1,24 @@
-import { listarVagas, criarVaga } from '../../../controllers/vagaController.js'
+import {
+  listarVagas,
+  criarVaga,
+  atualizarVaga,
+  deletarVaga
+} from '../../../controllers/vagaController';
 
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
-    return listarVagas(req, res)
-  } else if (req.method === 'POST') {
-    return criarVaga(req, res)
-  }
+  const { method } = req;
 
-  res.setHeader('Allow', ['GET', 'POST'])
-  res.status(405).end(`Method ${req.method} Not Allowed`)
+  switch (method) {
+    case 'GET':
+      return listarVagas(req, res);
+    case 'POST':
+      return criarVaga(req, res);
+    case 'PUT':
+      return atualizarVaga(req, res); 
+    case 'DELETE':
+      return deletarVaga(req, res);    
+    default:
+      res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
+      return res.status(405).json({ error: `Método ${method} não permitido` });
+  }
 }

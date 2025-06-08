@@ -49,108 +49,108 @@ export async function criarVaga(req, res) {
 }
 
 
-// Listar todas as vagas
+// Listar todas as vagas ou vagas por empresa
 export async function listarVagas(req, res) {
-  const { id_empresa } = req.query
+  const { id_empresa } = req.query;
 
   try {
-    const db = await connect()
-    const [vagas] = await db.execute(
-      `SELECT * FROM vagas WHERE id_empresa = ? ORDER BY vagas_id DESC`,
-      [id_empresa]
-    )
-    res.status(200).json(vagas)
+    const db = await connect();
+
+    let query = 'SELECT * FROM vagas';
+    let params = [];
+
+    // Se tiver id_empresa, filtra por empresa
+    if (id_empresa) {
+      query += ' WHERE id_empresa = ?';
+      params.push(id_empresa);
+    }
+
+    query += ' ORDER BY vagas_id DESC';
+
+    const [vagas] = await db.execute(query, params);
+    res.status(200).json(vagas);
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Erro ao buscar vagas', detail: err.message })
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao buscar vagas', detail: err.message });
   }
 }
 
+
+
 // Buscar vaga por ID
 export async function buscarVagaPorId(req, res) {
-  const { id } = req.query
+  const { id } = req.query;
 
   try {
-    const db = await connect()
-    const [vaga] = await db.execute('SELECT * FROM vagas WHERE vagas_id = ?', [id])
+    const db = await connect();
+    const [rows] = await db.execute('SELECT * FROM vagas WHERE vagas_id = ?', [id]);
 
-    if (vaga.length === 0) return res.status(404).json({ error: 'Vaga não encontrada' })
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Vaga não encontrada' });
+    }
 
-    res.status(200).json(vaga[0])
+    res.status(200).json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao buscar vaga', detail: err.message })
+    console.error('Erro ao buscar vaga:', err);
+    res.status(500).json({ error: 'Erro ao buscar vaga' });
   }
 }
 
 // Editar vaga
-export async function editarVaga(req, res) {
+export async function atualizarVaga(req, res) {
   const { id } = req.query;
+    console.log('Editando vaga com id:', id);
   const {
     titulo,
-    area,
+    tipoDeVaga,
     descricao,
+    area,
     salario,
     endereco,
     estado,
     atividades,
     requisitos,
-    horario,
-    tipoDeVaga
+    horario
   } = req.body;
-
-  if (!id) return res.status(400).json({ error: 'ID da vaga não informado' });
 
   try {
     const db = await connect();
     const [result] = await db.execute(
       `UPDATE vagas SET 
-        titulo = ?, area = ?, descricao = ?, salario = ?, endereco = ?, estado = ?, 
-        atividades = ?, requisitos = ?, horario = ?, tipoDeVaga = ?
+        titulo = ?, tipoDeVaga = ?, descricao = ?, area = ?, 
+        salario = ?, endereco = ?, estado = ?, 
+        atividades = ?, requisitos = ?, horario = ?
        WHERE vagas_id = ?`,
-      [
-        titulo,
-        area,
-        descricao,
-        salario,
-        endereco,
-        estado,
-        atividades,
-        requisitos,
-        horario,
-        tipoDeVaga,
-        id
-      ]
+      [titulo, tipoDeVaga, descricao, area, salario, endereco, estado, atividades, requisitos, horario, id]
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Vaga não encontrada para atualizar' });
+      return res.status(404).json({ error: 'Vaga não encontrada' });
     }
 
     res.status(200).json({ message: 'Vaga atualizada com sucesso' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erro ao atualizar vaga', detail: err.message });
+    console.error('Erro ao editar vaga:', err);
+    res.status(500).json({ error: 'Erro ao editar vaga' });
   }
 }
 
 
 // Deletar vaga
 export async function deletarVaga(req, res) {
-  const { id } = req.query
-
-  if (!id) return res.status(400).json({ error: 'ID da vaga não informado' })
+  const { id } = req.query;
 
   try {
-    const db = await connect()
-    const [result] = await db.execute('DELETE FROM vagas WHERE vagas_id = ?', [id])
+    const db = await connect();
+    const [result] = await db.execute('DELETE FROM vagas WHERE vagas_id = ?', [id]);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Vaga não encontrada para deletar' })
+      return res.status(404).json({ error: 'Vaga não encontrada' });
     }
 
-    res.status(200).json({ message: 'Vaga deletada com sucesso' })
+    res.status(200).json({ message: 'Vaga excluída com sucesso' });
   } catch (err) {
-    console.error('Erro ao excluir vaga:', err)
-    res.status(500).json({ error: 'Erro ao deletar vaga', detail: err.message })
+    console.error('Erro ao excluir vaga:', err);
+    res.status(500).json({ error: 'Erro ao excluir vaga' });
   }
 }

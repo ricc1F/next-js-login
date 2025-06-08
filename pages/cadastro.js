@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import styles from '../styles/Login.module.css'
+import EstrelasCaindo from '../src/components/estrelas/Estrelas'
 
 export default function CadastroPage() {
   const [form, setForm] = useState({
@@ -59,7 +60,7 @@ export default function CadastroPage() {
   
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container}><EstrelasCaindo></EstrelasCaindo>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h1 className={styles.title}>Cadastro</h1>
 
@@ -107,7 +108,7 @@ export default function CadastroPage() {
           onChange={(e) => handleChange(e, 'tipo_usuario')}
           required
         >
-          <option value="">Selecione o tipo de usuário</option>
+          <option value="" disabled selected hidden>Selecione o tipo de usuário</option>
           <option value="aluno">Aluno</option>
           <option value="empresa">Empresa</option>
         </select>

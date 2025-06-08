@@ -1,0 +1,393 @@
+/* CardVagas.module.css */
+
+.background {
+  width: 100%;
+  background-color: transparent;
+}
+
+.atronauta h1,
+.ConhecaVagas h1 {
+  color: #fff;
+  font-weight: 500;
+  font-size: 2.5rem;
+  display: flex;
+  margin-bottom: 3rem;
+  justify-content: center;
+}
+
+.container h5 {
+  font-size: clamp(1.5rem, 3vw, 1.5rem);
+  font-weight: 500;
+  color: #000;
+}
+
+.container h6 {
+  font-size: clamp(1rem, 3vw, 1rem);
+}
+
+.customCard {
+  width: 100%;
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s;
+  background-color: #fff;
+}
+
+.customCard:hover {
+  transform: scale(1.02);
+}
+
+.TextoCards {
+  margin: 0.4rem;
+  font-weight: 500;
+}
+
+.cardInfoItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 15px;
+}
+
+.ConteudoModal img,
+.TextoCards img {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+
+.ConteudoModal {
+  font-size: 15px;
+  max-height: 35vh;
+  margin-bottom: 0.5rem;
+  overflow-y: auto;
+}
+
+.ConteudoModal p {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 15px;
+}
+
+.BotaoCards,
+.BotaoModal {
+  padding: 12px 15px;
+  width: calc(100% - 30px);
+  text-align: center;
+  border-radius: 4px;
+  transition: all 0.3s;
+  font-size: 15px;
+  font-weight: 600;
+  bottom: 24px;
+}
+
+.BotaoVerMais button {
+  background-color: #148a9d;
+  color: #fff;
+  width: 16rem;
+  height: 4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: 0.1s ease;
+  margin-bottom: 1rem;
+}
+
+.BotaoVerMais button:hover {
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.BotaoXModal button {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid #148a9d;
+  padding: 0.5rem;
+  outline: none;
+  opacity: 1;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+.BotaoXModal button:focus,
+.BotaoXModal button:active {
+  background-color: #148a9d;
+  transform: scale(0.98);
+}
+
+@media (max-width: 992px) {
+  .TextoCards {
+    font-size: 15px;
+  }
+
+  .ConteudoModal {
+    font-size: 15px;
+  }
+
+  .BotaoModal {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .CardVagas {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .customCard {
+    width: 90% !important;
+    margin: 1rem 0 !important;
+    padding: 1rem;
+  }
+
+  .TextoCards {
+    font-size: 16px;
+    margin: 1rem 0 0 0;
+  }
+
+  .ConteudoModal {
+    font-size: 15px;
+    padding: 1rem;
+  }
+
+  .modal-dialog {
+    margin: 1rem;
+  }
+
+  .BotaoVerMais button {
+    width: 90% !important;
+    height: 3rem;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .BotaoCards {
+    font-size: 16px;
+    width: 100% !important;
+  }
+
+  .BotaoXModal button {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .ConhecaVagas h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Astronauta */
+/* @keyframes astronaut {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.astronaut {
+  width: 250px;
+  height: 300px;
+  position: relative;
+  
+  top: calc(50% - 200px);
+  left: calc(50% - 125px);
+  animation: astronaut 5s linear infinite;
+}
+
+.schoolbag {
+  width: 100px;
+  height: 150px;
+  position: absolute;
+  z-index: 1;
+  top: calc(50% - 75px);
+  left: calc(50% - 50px);
+  background-color: #94b7ca;
+  border-radius: 50px 50px 0 0 / 30px 30px 0 0;
+}
+
+.head {
+  width: 97px;
+  height: 80px;
+  position: absolute;
+  z-index: 3;
+  background: -webkit-linear-gradient(left, #e3e8eb 0%, #e3e8eb 50%, #fbfdfa 50%, #fbfdfa 100%);
+  border-radius: 50%;
+  top: 34px;
+  left: calc(50% - 47.5px);
+}
+
+.head:after {
+  content: "";
+  width: 60px;
+  height: 50px;
+  position: absolute;
+  top: calc(50% - 25px);
+  left: calc(50% - 30px);
+  background: -webkit-linear-gradient(top, #15aece 0%, #15aece 50%, #0391bf 50%, #0391bf 100%);
+  border-radius: 15px;
+}
+
+.head:before {
+  content: "";
+  width: 12px;
+  height: 25px;
+  position: absolute;
+  top: calc(50% - 12.5px);
+  left: -4px;
+  background-color: #618095;
+  border-radius: 5px;
+  box-shadow: 92px 0px 0px #618095;
+}
+
+.body {
+  width: 85px;
+  height: 100px;
+  position: absolute;
+  z-index: 2;
+  background-color: #fffbff;
+  border-radius: 40px / 20px;
+  top: 105px;
+  left: calc(50% - 41px);
+  background: -webkit-linear-gradient(left, #e3e8eb 0%, #e3e8eb 50%, #fbfdfa 50%, #fbfdfa 100%);
+}
+
+.panel {
+  width: 60px;
+  height: 40px;
+  position: absolute;
+  top: 20px;
+  left: calc(50% - 30px);
+  background-color: #b7cceb;
+}
+
+.panel:before {
+  content: "";
+  width: 30px;
+  height: 5px;
+  position: absolute;
+  top: 9px;
+  left: 7px;
+  background-color: #fbfdfa;
+  box-shadow: 0px 9px 0px #fbfdfa, 0px 18px 0px #fbfdfa;
+}
+
+.panel:after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 9px;
+  right: 7px;
+  background-color: #fbfdfa;
+  border-radius: 50%;
+  box-shadow: 0px 14px 0px 2px #fbfdfa;
+}
+
+.arm {
+  width: 80px;
+  height: 30px;
+  position: absolute;
+  top: 121px;
+  z-index: 2;
+}
+
+.arm-left {
+  left: 30px;
+  background-color: #e3e8eb;
+  border-radius: 0 0 0 39px;
+}
+
+.arm-right {
+  right: 30px;
+  background-color: #fbfdfa;
+  border-radius: 0 0 39px 0;
+}
+
+.arm-left:before,
+.arm-right:before {
+  content: "";
+  width: 30px;
+  height: 70px;
+  position: absolute;
+  top: -40px;
+}
+
+.arm-left:before {
+  border-radius: 50px 50px 0px 120px / 50px 50px 0 110px;
+  left: 0;
+  background-color: #e3e8eb;
+}
+
+.arm-right:before {
+  border-radius: 50px 50px 120px 0 / 50px 50px 110px 0;
+  right: 0;
+  background-color: #fbfdfa;
+}
+
+.arm-left:after,
+.arm-right:after {
+  content: "";
+  width: 30px;
+  height: 10px;
+  position: absolute;
+  top: -24px;
+}
+
+.arm-left:after {
+  background-color: #6e91a4;
+  left: 0;
+}
+
+.arm-right:after {
+  right: 0;
+  background-color: #b6d2e0;
+}
+
+.leg {
+  width: 30px;
+  height: 40px;
+  position: absolute;
+  z-index: 2;
+  bottom: 70px;
+}
+
+.leg-left {
+  left: 76px;
+  background-color: #e3e8eb;
+  transform: rotate(20deg);
+}
+
+.leg-right {
+  right: 73px;
+  background-color: #fbfdfa;
+  transform: rotate(-20deg);
+}
+
+.leg-left:before,
+.leg-right:before {
+  content: "";
+  width: 50px;
+  height: 25px;
+  position: absolute;
+  bottom: -26px;
+}
+
+.leg-left:before {
+  left: -20px;
+  background-color: #e3e8eb;
+  border-radius: 30px 0 0 0;
+  border-bottom: 10px solid #6d96ac;
+}
+
+.leg-right:before {
+  right: -20px;
+  background-color: #fbfdfa;
+  border-radius: 0 30px 0 0;
+  border-bottom: 10px solid #b0cfe4;
+} */

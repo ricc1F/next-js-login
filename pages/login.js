@@ -1,8 +1,11 @@
-import { useState } from 'react'
+'use client'
+
+import { useState, useEffect } from 'react'
 import { setCookie } from 'cookies-next'
-import { useRouter } from 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { jwtDecode } from 'jwt-decode'
+import EstrelasCaindo from '../src/components/estrelas/Estrelas'
 
 import styles from '../styles/Login.module.css'
 
@@ -15,6 +18,8 @@ export default function LoginPage() {
 
   const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const vagaId = searchParams.get('vagaId')
 
   const handleChangeForm = (event, field) => {
     setForm({
@@ -46,16 +51,25 @@ export default function LoginPage() {
 
       if (response.status !== 200) {
         throw new Error(typeof data === 'string' ? data : data.error || 'Erro desconhecido')
-      }      
+      }
 
+      // Salva o token JWT no cookie
       setCookie('authorization', data)
-      const decoded = jwtDecode(data)
 
+      const decoded = jwtDecode(data)
       if (decoded.tipo === 'empresa') {
         router.push('/empresa/dashboard')
+      } else if (decoded.tipo === 'aluno') {
+        if (vagaId) {
+          router.push(`/aluno/perfil?vagaId=${vagaId}`)
+        } else {
+          router.push('/aluno/perfil') // <-- Adiciona essa linha!
+        }
       } else {
-        router.push('/aluno/perfil')
+        setError('Tipo de usuário não reconhecido')
       }
+
+
 
     } catch (err) {
       setError(err.message || 'Erro ao fazer login')
@@ -64,6 +78,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.container}>
+      <EstrelasCaindo />
       <div className={styles.loginBox}>
         <h2 className={styles.title}>Login</h2>
         <form className={styles.form} onSubmit={handleForm}>
@@ -87,7 +102,7 @@ export default function LoginPage() {
             onChange={(event) => handleChangeForm(event, 'tipo_usuario')}
             required
           >
-            <option value="">Tipo de usuário</option>
+            <option value="" disabled hidden>Tipo de usuário</option>
             <option value="aluno">Aluno</option>
             <option value="empresa">Empresa</option>
           </select>
