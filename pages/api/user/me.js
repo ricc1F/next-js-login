@@ -16,7 +16,7 @@ export default function handler(req, res) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    res.status(200).json(decoded); // Retorna os dados do usuário contidos no token
+    res.status(200).json(decoded); 
   } catch (error) {
     res.status(403).json({ message: "Token inválido" });
   }

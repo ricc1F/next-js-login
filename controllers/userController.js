@@ -8,7 +8,8 @@ function generateToken(user, tipo) {
   return jwt.sign({
     id: tipo === 'aluno' ? user.matricula : user.id,
     email: user.email,
-    tipo
+    tipo,
+    nome: user.nome_aluno || user.nome_empresa  
   }, SECRET, { expiresIn: '1h' })
 }
 
