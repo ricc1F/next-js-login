@@ -56,16 +56,22 @@ export async function listarVagas(req, res) {
   try {
     const db = await connect();
 
-    let query = 'SELECT * FROM vagas';
+    let query = `
+      SELECT 
+        vagas.vagas_id AS id,
+        vagas.*, 
+        empresa.nome_empresa 
+      FROM vagas
+      JOIN empresa ON vagas.id_empresa = empresa.id
+    `;
     let params = [];
 
-    // Se tiver id_empresa, filtra por empresa
     if (id_empresa) {
-      query += ' WHERE id_empresa = ?';
+      query += ' WHERE vagas.id_empresa = ?';
       params.push(id_empresa);
     }
 
-    query += ' ORDER BY vagas_id DESC';
+    query += ' ORDER BY vagas.vagas_id DESC';
 
     const [vagas] = await db.execute(query, params);
     res.status(200).json(vagas);
@@ -74,7 +80,6 @@ export async function listarVagas(req, res) {
     res.status(500).json({ error: 'Erro ao buscar vagas', detail: err.message });
   }
 }
-
 
 
 // Buscar vaga por ID

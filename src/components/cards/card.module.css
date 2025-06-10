@@ -1,12 +1,13 @@
-/* CardVagas.module.css */
+/* Vagas.module.css */
 
+/* Fundo geral da seção de vagas */
 .background {
   width: 100%;
   background-color: transparent;
 }
 
-.atronauta h1,
-.ConhecaVagas h1 {
+.astronauta h1,
+.conhecaVagas h1 {
   color: #fff;
   font-weight: 500;
   font-size: 2.5rem;
@@ -15,6 +16,7 @@
   justify-content: center;
 }
 
+/* Título da vaga */
 .container h5 {
   font-size: clamp(1.5rem, 3vw, 1.5rem);
   font-weight: 500;
@@ -25,6 +27,7 @@
   font-size: clamp(1rem, 3vw, 1rem);
 }
 
+/* Estilo do card de vaga */
 .customCard {
   width: 100%;
   max-width: 24rem;
@@ -39,11 +42,13 @@
   transform: scale(1.02);
 }
 
-.TextoCards {
+/* Texto informativo nos cards */
+.textoCards {
   margin: 0.4rem;
   font-weight: 500;
 }
 
+/* Ícones e textos alinhados */
 .cardInfoItem {
   display: flex;
   align-items: center;
@@ -51,21 +56,23 @@
   font-size: 15px;
 }
 
-.ConteudoModal img,
-.TextoCards img {
+/* Tamanhos dos ícones nos cards e modais */
+.conteudoModal img,
+.textoCards img {
   margin-right: 5px;
   width: 20px;
   height: 20px;
 }
 
-.ConteudoModal {
+/* Conteúdo do Modal */
+.conteudoModal {
   font-size: 15px;
   max-height: 35vh;
   margin-bottom: 0.5rem;
   overflow-y: auto;
 }
 
-.ConteudoModal p {
+.conteudoModal p {
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -73,8 +80,9 @@
   font-size: 15px;
 }
 
-.BotaoCards,
-.BotaoModal {
+/* Botões principais (cards e modal) */
+.botaoCards,
+.botaoModal {
   padding: 12px 15px;
   width: calc(100% - 30px);
   text-align: center;
@@ -85,7 +93,8 @@
   bottom: 24px;
 }
 
-.BotaoVerMais button {
+/* Botão "Carregar mais" */
+.botaoVerMais button {
   background-color: #148a9d;
   color: #fff;
   width: 16rem;
@@ -96,12 +105,13 @@
   margin-bottom: 1rem;
 }
 
-.BotaoVerMais button:hover {
+.botaoVerMais button:hover {
   background-color: #17a2b8;
   color: #fff;
 }
 
-.BotaoXModal button {
+/* Botão de fechar modal (X) */
+.botaoXModal button {
   width: 3rem;
   height: 3rem;
   border: 2px solid #148a9d;
@@ -112,28 +122,31 @@
   background-color: transparent;
 }
 
-.BotaoXModal button:focus,
-.BotaoXModal button:active {
+.botaoXModal button:focus,
+.botaoXModal button:active {
   background-color: #148a9d;
+  border-color: #148a9d;
   transform: scale(0.98);
 }
 
+/* Responsividade para tablets */
 @media (max-width: 992px) {
-  .TextoCards {
+  .textoCards {
     font-size: 15px;
   }
 
-  .ConteudoModal {
+  .conteudoModal {
     font-size: 15px;
   }
 
-  .BotaoModal {
+  .botaoModal {
     width: 100% !important;
   }
 }
 
+/* Responsividade para celulares */
 @media (max-width: 768px) {
-  .CardVagas {
+  .cardVagas {
     flex-direction: column !important;
     align-items: center !important;
   }
@@ -144,12 +157,12 @@
     padding: 1rem;
   }
 
-  .TextoCards {
+  .textoCards {
     font-size: 16px;
     margin: 1rem 0 0 0;
   }
 
-  .ConteudoModal {
+  .conteudoModal {
     font-size: 15px;
     padding: 1rem;
   }
@@ -158,43 +171,42 @@
     margin: 1rem;
   }
 
-  .BotaoVerMais button {
+  .botaoVerMais button {
     width: 90% !important;
     height: 3rem;
     font-size: 0.95rem;
     padding: 0.5rem 1rem;
   }
 
-  .BotaoCards {
+  .botaoCards {
     font-size: 16px;
     width: 100% !important;
   }
 
-  .BotaoXModal button {
+  .botaoXModal button {
     width: 3rem;
     height: 3rem;
   }
 
-  .ConhecaVagas h1 {
+  .conhecaVagas h1 {
     font-size: 2rem;
   }
 }
 
 /* Astronauta */
-/* @keyframes astronaut {
+@keyframes astronaut {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }
 }
+
 .astronaut {
   width: 250px;
   height: 300px;
   position: relative;
-  
   top: calc(50% - 200px);
   left: calc(50% - 125px);
   animation: astronaut 5s linear infinite;
@@ -216,24 +228,24 @@
   height: 80px;
   position: absolute;
   z-index: 3;
-  background: -webkit-linear-gradient(left, #e3e8eb 0%, #e3e8eb 50%, #fbfdfa 50%, #fbfdfa 100%);
+  background: linear-gradient(to right, #e3e8eb 50%, #fbfdfa 50%);
   border-radius: 50%;
   top: 34px;
   left: calc(50% - 47.5px);
 }
 
-.head:after {
+.head::after {
   content: "";
   width: 60px;
   height: 50px;
   position: absolute;
   top: calc(50% - 25px);
   left: calc(50% - 30px);
-  background: -webkit-linear-gradient(top, #15aece 0%, #15aece 50%, #0391bf 50%, #0391bf 100%);
+  background: linear-gradient(to bottom, #15aece 50%, #0391bf 50%);
   border-radius: 15px;
 }
 
-.head:before {
+.head::before {
   content: "";
   width: 12px;
   height: 25px;
@@ -250,11 +262,10 @@
   height: 100px;
   position: absolute;
   z-index: 2;
-  background-color: #fffbff;
+  background: linear-gradient(to right, #e3e8eb 50%, #fbfdfa 50%);
   border-radius: 40px / 20px;
   top: 105px;
   left: calc(50% - 41px);
-  background: -webkit-linear-gradient(left, #e3e8eb 0%, #e3e8eb 50%, #fbfdfa 50%, #fbfdfa 100%);
 }
 
 .panel {
@@ -266,7 +277,7 @@
   background-color: #b7cceb;
 }
 
-.panel:before {
+.panel::before {
   content: "";
   width: 30px;
   height: 5px;
@@ -277,7 +288,7 @@
   box-shadow: 0px 9px 0px #fbfdfa, 0px 18px 0px #fbfdfa;
 }
 
-.panel:after {
+.panel::after {
   content: "";
   width: 8px;
   height: 8px;
@@ -297,20 +308,20 @@
   z-index: 2;
 }
 
-.arm-left {
+.armLeft {
   left: 30px;
   background-color: #e3e8eb;
   border-radius: 0 0 0 39px;
 }
 
-.arm-right {
+.armRight {
   right: 30px;
   background-color: #fbfdfa;
   border-radius: 0 0 39px 0;
 }
 
-.arm-left:before,
-.arm-right:before {
+.armLeft::before,
+.armRight::before {
   content: "";
   width: 30px;
   height: 70px;
@@ -318,33 +329,34 @@
   top: -40px;
 }
 
-.arm-left:before {
+.armLeft::before {
   border-radius: 50px 50px 0px 120px / 50px 50px 0 110px;
   left: 0;
   background-color: #e3e8eb;
 }
 
-.arm-right:before {
+.armRight::before {
   border-radius: 50px 50px 120px 0 / 50px 50px 110px 0;
   right: 0;
   background-color: #fbfdfa;
 }
 
-.arm-left:after,
-.arm-right:after {
+.armLeft::after {
   content: "";
   width: 30px;
   height: 10px;
   position: absolute;
   top: -24px;
-}
-
-.arm-left:after {
-  background-color: #6e91a4;
   left: 0;
+  background-color: #6e91a4;
 }
 
-.arm-right:after {
+.armRight::after {
+  content: "";
+  width: 30px;
+  height: 10px;
+  position: absolute;
+  top: -24px;
   right: 0;
   background-color: #b6d2e0;
 }
@@ -357,37 +369,38 @@
   bottom: 70px;
 }
 
-.leg-left {
+.legLeft {
   left: 76px;
   background-color: #e3e8eb;
   transform: rotate(20deg);
 }
 
-.leg-right {
+.legRight {
   right: 73px;
   background-color: #fbfdfa;
   transform: rotate(-20deg);
 }
 
-.leg-left:before,
-.leg-right:before {
+.legLeft::before {
   content: "";
   width: 50px;
   height: 25px;
   position: absolute;
   bottom: -26px;
-}
-
-.leg-left:before {
   left: -20px;
   background-color: #e3e8eb;
   border-radius: 30px 0 0 0;
   border-bottom: 10px solid #6d96ac;
 }
 
-.leg-right:before {
+.legRight::before {
+  content: "";
+  width: 50px;
+  height: 25px;
+  position: absolute;
+  bottom: -26px;
   right: -20px;
   background-color: #fbfdfa;
   border-radius: 0 30px 0 0;
   border-bottom: 10px solid #b0cfe4;
-} */
+}

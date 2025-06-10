@@ -1,37 +1,48 @@
-/* AlunoVagas.module.css */
+.Aluno {
+ 
+  padding: 2rem 1rem;
+}
 
-.AlunoTitulo {
+.Aluno h1 {
   color: #fff;
   font-weight: 500;
   font-size: 2.5rem;
   display: flex;
+  justify-content: flex-start;
   margin-bottom: 2rem;
-  justify-content: start;
 }
 
+/* Card do aluno */
 .AlunoCard {
   background-color: #f5f5f5;
   display: flex;
   justify-content: center;
-}
-
-.Formulario {
-  padding: 1rem;
-  background-color: #333; /* Exemplo, ajuste conforme necessário */
+  padding: 2rem;
   border-radius: 8px;
 }
 
-.FormularioTitulo {
+/* Formulári */
+.Formulario {
+  padding: 1rem;
+  background-color: #333;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Título do formulário */
+.Formulario h1 {
   font-size: 2.5rem;
-  font-weight: bold;
+  font-weight: 600;
   text-align: center;
   color: #fff;
   white-space: normal;
   margin-bottom: 2rem;
 }
 
-.Form input,
-.Form textarea {
+/* Campos do formulário */
+.Formulario input,
+.Formulario textarea {
   margin-top: 1.5rem;
   border: 1px solid;
   border-radius: 4px;
@@ -42,16 +53,19 @@
   width: 100%;
 }
 
-.Form input {
+.Formulario input {
   height: 3.5rem;
 }
 
-.Form input:focus,
-.Form textarea:focus {
+/* Foco nos campos */
+.Formulario input:focus,
+.Formulario textarea:focus {
   border-color: #000;
   box-shadow: 0 0 0 0.05rem;
+  outline: none;
 }
 
+/* Botão de envio */
 .BotaoEnviar button {
   margin: 2rem auto 0 auto;
   background-color: #148a9d;
@@ -67,4 +81,43 @@
 
 .BotaoEnviar button:hover {
   background-color: #17a2b8;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .Aluno h1 {
+    font-size: 2rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .Formulario h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .Formulario input,
+  .Formulario textarea {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .BotaoEnviar button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .Formulario h1 {
+    font-size: 1.6rem;
+  }
+
+  .Formulario input {
+    font-size: 13.5px;
+  }
+
+  .BotaoEnviar button {
+    font-size: 1rem;
+    height: 3.2rem;
+  }
 }

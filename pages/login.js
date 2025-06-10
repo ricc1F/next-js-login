@@ -1,4 +1,4 @@
-'use client'; // se estiver no app/ pode manter, no pages/ é opcional
+'use client';
 
 import { useState, useEffect } from 'react';
 import { setCookie } from 'cookies-next';
@@ -57,7 +57,11 @@ export default function LoginPage() {
       }
 
       // Salvar o token JWT
-      setCookie('authorization', data);
+      setCookie('authorization', data.token || data, {
+        path: '/', // importante
+        maxAge: 60 * 60 * 24, // 1 dia
+      });
+
 
       const decoded = jwtDecode(data);
 
@@ -68,9 +72,12 @@ export default function LoginPage() {
         if (vagaId) {
           router.push(`/aluno/perfil?vagaId=${vagaId}`);
         } else {
-          router.push('/aluno/perfil');
+          window.location.href = 'http://localhost:3000/home';
+
         }
-      } else {
+      }
+
+      else {
         setError('Tipo de usuário não reconhecido');
       }
     } catch (err) {
@@ -79,13 +86,42 @@ export default function LoginPage() {
   };
 
   return (
+    
     <div className={styles.container}>
+      <button
+  onClick={() => window.location.href = 'http://localhost:3000/home'}
+  style={{
+    position: 'absolute',
+    top: '2rem',
+    left: '3rem',
+    backgroundColor: 'black',
+    color: 'white',
+   borderColor:'white',
+    padding: '10px 20px',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    zIndex: 1000
+  }}
+>
+  HOME
+</button>
+
       <EstrelasCaindo />
 
       <div className={styles.loginBox}>
         <h2 className={styles.title}>Login</h2>
 
         <form className={styles.form} onSubmit={handleForm}>
+          <select
+            className={styles.select}
+            value={form.tipo_usuario}
+            onChange={(e) => handleChangeForm(e, 'tipo_usuario')}
+            required
+          >
+            <option value="" disabled hidden>Tipo de usuário</option>
+            <option value="aluno">Aluno</option>
+            <option value="empresa">Empresa</option>
+          </select>
           <input
             className={styles.input}
             type="email"
@@ -100,16 +136,7 @@ export default function LoginPage() {
             value={form.password}
             onChange={(e) => handleChangeForm(e, 'password')}
           />
-          <select
-            className={styles.select}
-            value={form.tipo_usuario}
-            onChange={(e) => handleChangeForm(e, 'tipo_usuario')}
-            required
-          >
-            <option value="" disabled hidden>Tipo de usuário</option>
-            <option value="aluno">Aluno</option>
-            <option value="empresa">Empresa</option>
-          </select>
+
 
           {error && <p className={styles.error}>{error}</p>}
 
@@ -123,3 +150,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+

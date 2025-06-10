@@ -4,15 +4,17 @@ import { connect } from '../config/db.js'
 
 const SECRET = process.env.JWT_SECRET || 'secreto'
 
+// Gera token JWT
 function generateToken(user, tipo) {
   return jwt.sign({
     id: tipo === 'aluno' ? user.matricula : user.id,
-    email: user.email,
+    email: user.email || user.email_empresa,
     tipo,
-    nome: user.nome_aluno || user.nome_empresa  
+    nome: user.nome_aluno || user.nome_empresa
   }, SECRET, { expiresIn: '1h' })
 }
 
+// Login
 export async function login(req, res) {
   try {
     const { email, senha, tipo_usuario } = req.body
@@ -38,11 +40,13 @@ export async function login(req, res) {
   }
 }
 
+// Cadastro
 export async function cadastro(req, res) {
   try {
     const db = await connect()
     const { tipo_usuario } = req.body
 
+    // Cadastro de aluno
     if (tipo_usuario === 'aluno') {
       const { nome_aluno, email, senha, idade, endereco_aluno, nome_escola } = req.body
 
@@ -64,21 +68,25 @@ export async function cadastro(req, res) {
       const token = generateToken(novo[0], 'aluno')
       return res.status(200).json(token)
 
+    // Cadastro de empresa
     } else if (tipo_usuario === 'empresa') {
-      const { nome_empresa, email_empresa, senha, endereco_empresa } = req.body
+      const { nome_empresa, email_empresa, senha, endereco_empresa, cnpj } = req.body
 
-      if (!nome_empresa || !email_empresa || !senha || !endereco_empresa) {
+      if (!nome_empresa || !email_empresa || !senha || !endereco_empresa || !cnpj) {
         return res.status(400).json({ error: 'Todos os campos da empresa são obrigatórios' })
       }
 
-      const [empresaExist] = await db.execute('SELECT * FROM empresa WHERE email_empresa = ?', [email_empresa])
+      const [empresaExist] = await db.execute(
+        'SELECT * FROM empresa WHERE email_empresa = ? OR cnpj = ?',
+        [email_empresa, cnpj]
+      )
       if (empresaExist.length > 0) return res.status(400).json('Empresa já cadastrada')
 
       const senhaHash = await bcrypt.hash(senha, 10)
 
       await db.execute(
-        'INSERT INTO empresa (nome_empresa, email_empresa, senha, endereco_empresa) VALUES (?, ?, ?, ?)',
-        [nome_empresa, email_empresa, senhaHash, endereco_empresa]
+        'INSERT INTO empresa (nome_empresa, email_empresa, senha, endereco_empresa, cnpj) VALUES (?, ?, ?, ?, ?)',
+        [nome_empresa, email_empresa, senhaHash, endereco_empresa, cnpj]
       )
 
       const [nova] = await db.execute('SELECT * FROM empresa WHERE email_empresa = ?', [email_empresa])
@@ -92,3 +100,14 @@ export async function cadastro(req, res) {
     res.status(500).json(err.message)
   }
 }
+const router = express.Router()
+
+// Adicione suporte a OPTIONS para /user/me
+router.options('/user/me', cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}))
+
+router.get('/user/me', getUsuarioLogado)
+
+export default router

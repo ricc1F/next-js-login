@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "bootstrap": "^5.3.6",
+    "cookie": "^1.0.2",
+    "cookie-parser": "^1.4.7",
     "cookies-next": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",

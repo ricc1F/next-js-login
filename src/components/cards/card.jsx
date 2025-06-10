@@ -2,7 +2,10 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { getCookie } from 'cookies-next';
+import { jwtDecode } from 'jwt-decode';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './card.module.css';
 
@@ -15,6 +18,8 @@ export default function CardVagas({
   const [visibleCount, setVisibleCount] = useState(limiteInicial);
   const [modalVisible, setModalVisible] = useState(false);
   const [vagaSelecionada, setVagaSelecionada] = useState(null);
+
+  const router = useRouter();
 
   const handleToggle = (action) => {
     if (action === 'more' && visibleCount < vagas.length) {
@@ -35,6 +40,31 @@ export default function CardVagas({
     setVagaSelecionada(null);
   };
 
+  const handleTenhoInteresse = () => {
+    if (!vagaSelecionada?.id) return;
+
+    const token = getCookie('authorization');
+    const redirectToLogin = `http://localhost:3001/login?vagaId=${vagaSelecionada.id}`;
+    const redirectToPerfil = `http://localhost:3001/aluno/perfil?vagaId=${vagaSelecionada.id}`;
+
+    if (!token) {
+      window.location.href = redirectToLogin;
+      return;
+    }
+
+    try {
+      const user = jwtDecode(token);
+      if (user?.tipo === 'aluno') {
+        window.location.href = redirectToPerfil;
+      } else {
+        window.location.href = redirectToLogin;
+      }
+    } catch (err) {
+      console.error('Erro ao decodificar token:', err);
+      window.location.href = redirectToLogin;
+    }
+  };
+
   return (
     <section className={styles.background}>
       <motion.div
@@ -50,16 +80,16 @@ export default function CardVagas({
               <div className={styles.atronauta}>
                 <div className={styles.astronaut}>
                   <div className={styles.head}></div>
-                  <div className={`${styles.arm} ${styles.armLeft}`}></div>
-                  <div className={`${styles.arm} ${styles.armRight}`}></div>
+                  <div className={`${styles.arm} ${styles['arm-left']}`}></div>
+                  <div className={`${styles.arm} ${styles['arm-right']}`}></div>
                   <div className={styles.body}>
                     <div className={styles.panel}></div>
                   </div>
-                  <div className={styles.legLeft}></div>
-                  <div className={styles.legRight}></div>
+                  <div className={`${styles.leg} ${styles['leg-left']}`}></div>
+                  <div className={`${styles.leg} ${styles['leg-right']}`}></div>
                   <div className={styles.schoolbag}></div>
                 </div>
-                <h1> Desculpe! Não encontramos vagas no momento.</h1>
+                <h1>Desculpe! Não encontramos vagas no momento.</h1>
               </div>
             )}
           </div>
@@ -71,7 +101,7 @@ export default function CardVagas({
               {vagas.slice(0, visibleCount).map((vaga, index) => (
                 <motion.div
                   key={vaga.id || index}
-                  className={`card m-2 mt-3 mb-2 ${styles.customCard}`}
+                  className={`card m-2 mt-3 mb-2 ${styles['custom-card']}`}
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.03 }}
@@ -80,18 +110,22 @@ export default function CardVagas({
                   <div className="card-body">
                     <h5 className="card-title">{vaga.titulo}</h5>
                     <h6 className={styles.decription}>{vaga.descricao}</h6>
+                    <h6 className={styles['empresa-nome']}>
+                      <img src="/IconsCards/empresa.png" alt="Empresa" style={{ width: '16px', marginRight: '5px' }} />
+                      <strong>Empresa:</strong> {vaga.nome_empresa}
+                    </h6>
                     <div className={`card-text ${styles.TextoCards}`}>
-                      <div className={styles.cardInfoItem}>
-                        <img src="/IconsCards/star.png" alt="estrela" /> {vaga.area}
+                      <div className={styles['card-info-item']}>
+                        <img src="/IconsCards/star.png" alt="Área" /> <strong>Área:</strong> {vaga.area}
                       </div>
-                      <div className={styles.cardInfoItem}>
-                        <img src="/IconsCards/location.png" alt="localização" /> {vaga.localizacao} - {vaga.estado}
+                      <div className={styles['card-info-item']}>
+                        <img src="/IconsCards/location.png" alt="Localização" /> <strong>Local:</strong> {vaga.endereco} - {vaga.estado}
                       </div>
-                      <div className={styles.cardInfoItem}>
-                        <img src="/IconsCards/clock.png" alt="relógio" /> {vaga.horario}
+                      <div className={styles['card-info-item']}>
+                        <img src="/IconsCards/clock.png" alt="Horário" /> <strong>Carga horária:</strong> {vaga.horario}
                       </div>
-                      <div className={styles.cardInfoItem}>
-                        <img src="/IconsCards/dollar.png" alt="dólar" /> {vaga.salario}
+                      <div className={styles['card-info-item']}>
+                        <img src="/IconsCards/dollar.png" alt="Salário" /> <strong>Salário:</strong> {vaga.salario}
                       </div>
                     </div>
                     {botaoPersonalizado ? (
@@ -117,7 +151,6 @@ export default function CardVagas({
         </div>
       </motion.div>
 
-      {/* Modal */}
       <AnimatePresence>
         {exibirModal && modalVisible && vagaSelecionada && (
           <motion.div
@@ -137,44 +170,52 @@ export default function CardVagas({
               transition={{ duration: 0 }}
             >
               <div className="modal-content">
-                <div className={styles.BotaoXModal}>
+                <div className={`modal-header ${styles.BotaoXModal}`}>
                   <button type="button" className="btn-close" onClick={fecharModal}></button>
                 </div>
-                <div className={styles.ConteudoModal}>
+                <div className={`modal-body ${styles.ConteudoModal}`}>
                   <h5 className="modal-title">{vagaSelecionada.titulo}</h5>
                   <h6 className={styles.decription}>{vagaSelecionada.descricao}</h6>
-                  <p><img src="/IconsCards/star.png" alt="estrela" /> {vagaSelecionada.area}</p>
-                  <p><img src="/IconsCards/location.png" alt="localização" /> {vagaSelecionada.localizacao}</p>
-                  <p><img src="/IconsCards/clock.png" alt="relógio" /> {vagaSelecionada.horario}</p>
-                  <p><img src="/IconsCards/dollar.png" alt="dólar" /> {vagaSelecionada.salario}</p>
+                  <h6 className={styles['empresa-nome']}>
+                    <img src="/IconsCards/empresa.png" alt="Empresa" style={{ width: '16px', marginRight: '5px' }} />
+                    <strong>Empresa:</strong> {vagaSelecionada.nome_empresa}
+                  </h6>
+                  <p><img src="/IconsCards/star.png" alt="Área" /> <strong>Área:</strong> {vagaSelecionada.area}</p>
+                  <p><img src="/IconsCards/location.png" alt="Endereço" /> <strong>Local:</strong> {vagaSelecionada.endereco}</p>
+                  <p><img src="/IconsCards/clock.png" alt="Horário" /> <strong>Carga horária:</strong> {vagaSelecionada.horario}</p>
+                  <p><img src="/IconsCards/dollar.png" alt="Salário" /> <strong>Salário:</strong> {vagaSelecionada.salario}</p>
+
                   <div className="mb-3">
                     <strong>Atividades</strong>
                     <ul>
-                      {vagaSelecionada.atividades?.map((a, i) => <li key={i}>{a}</li>)}
+                      {(vagaSelecionada.atividades || []).map((a, i) => (
+                        <li key={i}>{a}</li>
+                      ))}
                     </ul>
                   </div>
                   <div className="mb-2">
                     <strong>Requisitos</strong>
                     <ul>
-                      {vagaSelecionada.requisitos?.map((r, i) => <li key={i}>{r}</li>)}
+                      {(vagaSelecionada.requisitos || []).map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
                     </ul>
                   </div>
                 </div>
                 <div className={styles.BotaoModal}>
-                  <Link href={`/alunos?vagaId=${vagaSelecionada.id}`} passHref>
-                    <button
-                      type="button"
-                      className="btn btn"
-                      style={{
-                        borderColor: '#148a9d',
-                        width: '20rem',
-                        border: '2px solid #148a9d',
-                        color: '#000',
-                      }}
-                    >
-                      Tenho Interesse
-                    </button>
-                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleTenhoInteresse}
+                    className="btn btn"
+                    style={{
+                      borderColor: '#148a9d',
+                      width: '20rem',
+                      border: '2px solid #148a9d',
+                      color: '#000',
+                    }}
+                  >
+                    Tenho Interesse
+                  </button>
                 </div>
               </div>
             </motion.div>

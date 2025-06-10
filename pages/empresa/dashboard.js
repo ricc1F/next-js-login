@@ -149,7 +149,7 @@ export default function DashboardEmpresa() {
 
   const handleLogout = () => {
     deleteCookie('authorization')
-    router.push('/login')
+     window.location.href = 'http://localhost:3000/home';
   }
 
   if (!empresa) return <p className="text-white">Carregando...</p>
