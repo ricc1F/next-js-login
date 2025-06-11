@@ -187,10 +187,10 @@ export default function DashboardEmpresa() {
   return (
 
     <><Header></Header>
-      <div className="container py-5 text-white mt-5 Formulario">
+      <div className="container py-5 text-white mt-5 Formulario" >
         <EstrelasCaindo />
 
-        <div className="row align-items-start mb-5">
+        <div className="row align-items-start mb-5" style={{marginTop: '30rem'}}>
           <motion.div
             className="col-md-6 d-flex justify-content-center"
             initial={{ x: -100, opacity: 0 }}
