@@ -1,0 +1,253 @@
+.mainHeader {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px) brightness(1.2);
+  -webkit-backdrop-filter: blur(12px) brightness(1.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  /* Garante que o header tenha altura definida */
+  height: 80px; /* Ajuste conforme necessário */
+}
+
+.logo {
+  width: 4.5rem;
+  max-width: 100%;
+  margin: 1rem auto;
+  display: block;
+}
+
+.userInfo {
+  margin-right: 2rem;
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.logoutButton {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background 0.3s;
+}
+
+.logoutButton:hover {
+  background-color: rgba(255, 4, 4, 0.856);
+}
+
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  max-width: 1120px;
+  padding: 1rem;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.menuToggle {
+  display: block;
+  padding: 0.5rem;
+  border: none;
+  background: none;
+  border-radius: 0.375rem;
+  color: #148a9d;
+  cursor: pointer;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+.menuIcon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.menu {
+  display: none;
+  width: 100%;
+  font-weight: 600;
+  text-align: center;
+  font-size: 17px;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  list-style: none;
+  width: 100%;
+}
+
+.menu a {
+  margin: 1rem 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.menu a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.menuOpen {
+  display: flex;
+}
+
+.authButtons {
+  display: none;
+  flex-direction: row;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.authButtonsOpen {
+  display: flex;
+}
+
+.login,
+.cadastre {
+  width: 100%;
+  min-width: 140px;
+  max-width: 180px;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 0 1rem;
+}
+
+.login {
+  color: #fff;
+  background-color: transparent;
+  margin-left: 1.5rem;
+  border: 3px solid #148a9d;
+}
+
+.login:hover {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.cadastre {
+  background-color: #148a9d;
+  color: white;
+}
+
+.cadastre:hover {
+  background-color: #17a2b8;
+}
+
+@media (min-width: 640px) {
+  .logo {
+    width: 6rem;
+    margin: 0 1rem;
+  }
+  
+  .navbar {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .menuToggle {
+    display: none;
+  }
+  
+  .menu {
+    display: flex;
+    flex-direction: row;
+    gap: 4rem;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    margin-left: 6rem;
+  }
+  
+  .authButtons {
+    display: flex;
+    margin-left: auto;
+    width: auto;
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+  
+  .login,
+  .cadastre {
+    width: 180px;
+  }
+}
+
+@media (max-width: 639px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .authButtons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .login,
+  .cadastre {
+    max-width: 90%;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 959px) {
+  .navbar {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    margin: 0 1rem 0 0;
+    flex-shrink: 0;
+  }
+  
+  .menu {
+    display: flex !important;
+    flex: 1 1 auto;
+    justify-content: center;
+    gap: 2rem;
+    margin: 0 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  
+  .authButtons {
+    display: flex !important;
+    margin-left: 0;
+    flex-shrink: 0;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+  
+  .login,
+  .cadastre {
+    max-width: 140px;
+    padding: 0 1rem;
+  }
+}

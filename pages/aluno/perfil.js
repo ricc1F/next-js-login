@@ -1,206 +1,261 @@
-'use client'
+'use client';
 
-import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { getCookie, deleteCookie } from 'cookies-next'
-import { useUsuarioLogado } from '../hook/useUsuarioLogado'
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { getCookie, deleteCookie } from 'cookies-next';
+import { useUsuarioLogado } from '../hook/useUsuarioLogado';
+import { motion } from 'framer-motion';
 
-import "bootstrap/dist/css/bootstrap.min.css"
-import EstrelasCaindo from '../../src/components/estrelas/Estrelas'
-import styles from './AlunoVagas.module.css'
-import CardVagas from '../../src/components/cards/card'
+import "bootstrap/dist/css/bootstrap.min.css";
+import EstrelasCaindo from '../../src/components/estrelas/Estrelas';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+import Header from '../../src/components/Header/Header';
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function AlunoVagas() {
-  const searchParams = useSearchParams()
-  const vagaId = searchParams.get('vagaId')
+  const searchParams = useSearchParams();
+  const vagaId = searchParams.get('vagaId');
 
-  const [vagas, setVagas] = useState([])
-  const [vaga, setVaga] = useState(null)
-  const [relacionadas, setRelacionadas] = useState([])
-  const [telefone, setTelefone] = useState('')
-  const [curriculo, setCurriculo] = useState(null)
-  const [mensagem, setMensagem] = useState('')
-  const [showModal, setShowModal] = useState(false)
+  const [vagas, setVagas] = useState([]);
+  const [vaga, setVaga] = useState(null);
+  const [relacionadas, setRelacionadas] = useState([]);
+  const [telefone, setTelefone] = useState('');
+  const [curriculo, setCurriculo] = useState(null);
+  const [mensagem, setMensagem] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
-  const { usuario: aluno, carregando, erro } = useUsuarioLogado()
+  const { usuario: aluno, carregando, erro } = useUsuarioLogado();
 
   useEffect(() => {
-    document.body.style.backgroundColor = 'black'
-    document.body.style.margin = '0'
-    document.body.style.overflowX = 'hidden'
-  }, [])
+    document.body.style.backgroundColor = 'black';
+    document.body.style.margin = '0';
+    document.body.style.overflowX = 'hidden';
+
+    return () => {
+      document.body.style.backgroundColor = '';
+      document.body.style.margin = '';
+      document.body.style.overflowX = '';
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchVagas() {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/vagas`)
-        const data = await res.json()
+        const res = await fetch(`${BACKEND_URL}/api/vagas`);
+        const data = await res.json();
         const formatadas = data.map(v => ({
           ...v,
           id: v.vagas_id,
           atividades: v.atividades?.split(',') || [],
           requisitos: v.requisitos?.split(',') || [],
-        }))
-        setVagas(formatadas)
+        }));
+        setVagas(formatadas);
       } catch (err) {
-        console.error(err)
-        setMensagem('Erro ao carregar vagas.')
+        console.error(err);
+        setMensagem('Erro ao carregar vagas.');
       }
     }
-    fetchVagas()
-  }, [])
+
+    fetchVagas();
+  }, []);
 
   useEffect(() => {
     if (vagaId && vagas.length > 0) {
-      const selecionada = vagas.find(v => v.id.toString() === vagaId)
-      setVaga(selecionada)
-      const relacionadas = vagas.filter(v => v.area === selecionada?.area && v.id !== selecionada?.id)
-      setRelacionadas(relacionadas)
+      const selecionada = vagas.find(v => v.id.toString() === vagaId);
+      setVaga(selecionada);
+      const relacionadas = vagas.filter(v => v.area === selecionada?.area && v.id !== selecionada?.id);
+      setRelacionadas(relacionadas);
     }
-  }, [vagaId, vagas])
+  }, [vagaId, vagas]);
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    const token = getCookie('authorization')
-    if (!token) return setMensagem('Você precisa estar logado.')
+    e.preventDefault();
+    const token = getCookie('authorization');
 
-    if (!telefone) return setMensagem('Por favor, preencha o telefone.')
-    if (!curriculo) return setMensagem('Por favor, envie seu currículo.')
+    if (!token) return setMensagem('Você precisa estar logado.');
+    if (!telefone) return setMensagem('Por favor, preencha o telefone.');
+    if (!curriculo) return setMensagem('Por favor, envie seu currículo.');
 
-    const formData = new FormData()
-    formData.append('vagaId', vaga.id)
-    formData.append('telefone', telefone)
-    formData.append('curriculo', curriculo)
+    const formData = new FormData();
+    formData.append('vagas_id', vaga.id);
+    formData.append('matricula', aluno.matricula);
+    formData.append('curriculo', curriculo);
+    formData.append('telefone', telefone);
 
     try {
       const res = await fetch(`${BACKEND_URL}/api/candidatura`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
-      })
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-      if (!res.ok) throw new Error('Erro ao enviar inscrição')
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data?.error || 'Erro ao enviar inscrição');
+      }
 
-      setTelefone('')
-      setCurriculo(null)
-      setShowModal(true)
+      setTelefone('');
+      setCurriculo(null);
+      setShowModal(true);
+      setMensagem('');
     } catch (err) {
-      console.error(err)
-      setMensagem('Erro ao enviar inscrição. Tente novamente.')
+      console.error(err);
+      setMensagem(err.message || 'Erro ao enviar inscrição. Tente novamente.');
     }
   }
 
   const handleLogout = () => {
-    deleteCookie('authorization')
-    window.location.href = '/home'
-  }
+    deleteCookie('authorization');
+    window.location.href = '/home';
+  };
 
   function closeModal() {
-    setShowModal(false)
+    setShowModal(false);
   }
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
 
   return (
-    <div className="container mt-4 mb-5">
-      <div className={styles.Aluno}>
+    <>
+      <Header />
+      <div className="container py-5 text-white mt-5 Formulario">
         <EstrelasCaindo />
-        {mounted && !carregando && aluno && (
-          <h1>Bem-vindo, {aluno.nome}</h1>
 
-        )}
-        <button className="btn btn-danger mb-4 mt-3 col-md-2" onClick={handleLogout}>Sair</button>
         {carregando ? (
-          <p className="text-light">Carregando dados do aluno...</p>
+          <p className="text-white">Carregando dados do aluno...</p>
         ) : erro ? (
           <p className="text-danger">{erro}</p>
-        ) : aluno ? (
-          <div className="mb-4 text-white">
-            <p><strong>Nome:</strong> {aluno.nome}</p>
-            <p><strong>Email:</strong> {aluno.email}</p>
-          </div>
-        ) : (
+        ) : aluno ? null : (
           <p className="text-warning">Usuário não autenticado</p>
         )}
 
         {vaga && (
           <>
-            <h2 className="text-start text-white mb-4">Vaga Selecionada</h2>
-            <div className="row justify-content-start">
-              <div className={`card col-md-8 p-4 mb-4 d-flex ${styles.AlunoCard}`}>
-                <h4>{vaga.titulo}</h4>
-                <p>{vaga.descricao}</p>
-                <p><strong>Área:</strong> {vaga.area}</p>
-                <p><strong>Localização:</strong> {vaga.localizacao}</p>
-                <p><strong>Horário:</strong> {vaga.horario}</p>
-                <p><strong>Salário:</strong> {vaga.salario}</p>
-                <h5>Atividades:</h5>
-                <ul>{vaga.atividades.map((a, i) => <li key={i}>{a}</li>)}</ul>
-                <h5>Requisitos:</h5>
-                <ul>{vaga.requisitos.map((r, i) => <li key={i}>{r}</li>)}</ul>
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              className="row align-items-start mb-5"
+            >
+              <div className="col-md-4 d-flex justify-content-start">
+                <img 
+                  src="/Astronautas/AstronautaVaga.png" 
+                  alt="vaga" 
+                  style={{ width: '25rem', height: 'auto', marginTop:'16rem' }} 
+                />
               </div>
-            </div>
+
+              <div className="col-md-8 -flex justify-content-end"
+              style={{ marginTop:'12rem'}}>
+                <div className="bg-dark text-white mb-3 p-4 rounded">
+                  <h2 className="mb-4 FormularioTitulo">Vaga Selecionada</h2>
+                  <div className="card bg-dark text-white p-3">
+                    <h4>{vaga.titulo}</h4>
+                    <p>{vaga.descricao}</p>
+                    <p><strong>Área:</strong> {vaga.area}</p>
+                    <p><strong>Localização:</strong> {vaga.localizacao}</p>
+                    <p><strong>Horário:</strong> {vaga.horario}</p>
+                    <p><strong>Salário:</strong> {vaga.salario}</p>
+                    <h5>Atividades:</h5>
+                    <ul>{vaga.atividades.map((a, i) => <li key={i}>{a}</li>)}</ul>
+                    <h5>Requisitos:</h5>
+                    <ul>{vaga.requisitos.map((r, i) => <li key={i}>{r}</li>)}</ul>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </>
         )}
 
         {vaga && aluno && (
-          <div className={`card p-3 mb-4 ${styles.Formulario}`}>
-            <h2 className={styles.FormularioTitulo}>Se inscreva nesta vaga</h2>
-            <form onSubmit={handleSubmit} encType="multipart/form-data" className={styles.Form}>
-              <label>
-                Telefone:
-                <input type="tel" value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
-              </label>
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="row"
+          >
+            <div className="col-md-8 mx-auto">
+              <div className="bg-dark text-white mb-3 p-4 rounded">
+                <h1 className="FormularioTitulo mb-4">Se inscreva nesta vaga</h1>
+                <p><strong>Nome:</strong> {aluno.nome}</p>
+                <p><strong>Email:</strong> {aluno.email}</p>
 
-              <label>
-                Currículo (PDF ou DOC):
-                <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => setCurriculo(e.target.files[0])} required />
-              </label>
+                <form onSubmit={handleSubmit} encType="multipart/form-data" className="Form row g-3 mt-3">
+                  <div className="col-md-6">
+                    <label className="form-label">
+                      Telefone:
+                      <input
+                        type="tel"
+                        value={telefone}
+                        onChange={(e) => setTelefone(e.target.value)}
+                        placeholder="(99) 99999-9999"
+                        required
+                        maxLength={15}
+                        className="form-control"
+                      />
+                    </label>
+                  </div>
 
-              <div className={styles.BotaoEnviar}>
-                <button type="submit" disabled={!telefone || !curriculo}>Inscrever-se</button>
+                  <div className="col-md-6">
+                    <label className="form-label">
+                      Currículo (PDF ou DOC):
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={(e) => setCurriculo(e.target.files[0])}
+                        required
+                        className="form-control"
+                      />
+                    </label>
+                  </div>
+
+                  <div className="col-md-12 BotaoEnviar">
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary"
+                      style={{ backgroundColor: '#148a9d', borderColor: '#148a9d' }}
+                    >
+                      Inscrever-se
+                    </button>
+                  </div>
+                </form>
+
+                {mensagem && (
+                  <div className={`alert ${mensagem.includes('Erro') ? 'alert-danger' : 'alert-warning'} mt-3`}>
+                    {mensagem}
+                  </div>
+                )}
               </div>
-            </form>
-            {mensagem && <p className="mt-2 text-danger">{mensagem}</p>}
-          </div>
-        )}
-
-        {vaga && (
-          relacionadas.length === 0 ? (
-            <h2 className="mt-5 text-white">Desculpe! Não temos vagas relacionadas no momento.</h2>
-          ) : (
-            <>
-              <h2 className="mt-5 text-white">Vagas relacionadas</h2>
-              <CardVagas vagas={relacionadas} />
-            </>
-          )
+            </div>
+          </motion.div>
         )}
 
         {showModal && (
-          <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1" role="dialog" onClick={closeModal}>
-            <div className="modal-dialog" role="document" onClick={e => e.stopPropagation()}>
-              <div className="modal-content">
+          <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div className="modal-dialog">
+              <div className="modal-content bg-dark text-white">
                 <div className="modal-header">
                   <h5 className="modal-title">Inscrição realizada</h5>
-                  <button type="button" className="btn-close" onClick={closeModal}></button>
+                  <button type="button" className="btn-close btn-close-white" onClick={closeModal}></button>
                 </div>
                 <div className="modal-body">
                   <p>Você se inscreveu com sucesso nesta vaga! Boa sorte!</p>
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-primary" onClick={closeModal}>Fechar</button>
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary" 
+                    onClick={closeModal}
+                  >
+                    Fechar
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         )}
       </div>
-    </div>
-  )
+    </>
+  );
 }

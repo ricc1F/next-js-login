@@ -112,20 +112,20 @@ export default function CardVagas({
                     <h6 className={styles.decription}>{vaga.descricao}</h6>
                     <h6 className={styles['empresa-nome']}>
                       <img src="/IconsCards/empresa.png" alt="Empresa" style={{ width: '16px', marginRight: '5px' }} />
-                      <strong>Empresa:</strong> {vaga.nome_empresa}
+                      <strong>{vaga.nome_empresa}</strong>
                     </h6>
                     <div className={`card-text ${styles.TextoCards}`}>
                       <div className={styles['card-info-item']}>
-                        <img src="/IconsCards/star.png" alt="Área" /> <strong>Área:</strong> {vaga.area}
+                        <img src="/IconsCards/star.png" alt="Área" /> {vaga.area}
                       </div>
                       <div className={styles['card-info-item']}>
-                        <img src="/IconsCards/location.png" alt="Localização" /> <strong>Local:</strong> {vaga.endereco} - {vaga.estado}
+                        <img src="/IconsCards/location.png" alt="Localização" /> {vaga.endereco} - {vaga.estado}
                       </div>
                       <div className={styles['card-info-item']}>
-                        <img src="/IconsCards/clock.png" alt="Horário" /> <strong>Carga horária:</strong> {vaga.horario}
+                        <img src="/IconsCards/clock.png" alt="Horário" /> {vaga.horario}
                       </div>
                       <div className={styles['card-info-item']}>
-                        <img src="/IconsCards/dollar.png" alt="Salário" /> <strong>Salário:</strong> {vaga.salario}
+                        <img src="/IconsCards/dollar.png" alt="Salário" /> {vaga.salario}
                       </div>
                     </div>
                     {botaoPersonalizado ? (
@@ -178,12 +178,12 @@ export default function CardVagas({
                   <h6 className={styles.decription}>{vagaSelecionada.descricao}</h6>
                   <h6 className={styles['empresa-nome']}>
                     <img src="/IconsCards/empresa.png" alt="Empresa" style={{ width: '16px', marginRight: '5px' }} />
-                    <strong>Empresa:</strong> {vagaSelecionada.nome_empresa}
+                    <strong>{vagaSelecionada.nome_empresa}</strong>
                   </h6>
-                  <p><img src="/IconsCards/star.png" alt="Área" /> <strong>Área:</strong> {vagaSelecionada.area}</p>
-                  <p><img src="/IconsCards/location.png" alt="Endereço" /> <strong>Local:</strong> {vagaSelecionada.endereco}</p>
-                  <p><img src="/IconsCards/clock.png" alt="Horário" /> <strong>Carga horária:</strong> {vagaSelecionada.horario}</p>
-                  <p><img src="/IconsCards/dollar.png" alt="Salário" /> <strong>Salário:</strong> {vagaSelecionada.salario}</p>
+                  <p><img src="/IconsCards/star.png" alt="Área" /> {vagaSelecionada.area}</p>
+                  <p><img src="/IconsCards/location.png" alt="Endereço" /> {vagaSelecionada.endereco}</p>
+                  <p><img src="/IconsCards/clock.png" alt="Horário" /> {vagaSelecionada.horario}</p>
+                  <p><img src="/IconsCards/dollar.png" alt="Salário" /> {vagaSelecionada.salario}</p>
 
                   <div className="mb-3">
                     <strong>Atividades</strong>

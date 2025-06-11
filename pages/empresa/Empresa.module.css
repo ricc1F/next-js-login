@@ -1,27 +1,28 @@
-
-.AstronautaEditar img{
+.AstronautaEditar img {
   width: 35rem;
-  margin-right: 4rem ;
-  
+  max-width: 100%;
+  margin-right: 4rem;
 }
+
 .empresa-vagas h1 {
-      color: #fff;
+  color: #fff;
   font-weight: 500;
   font-size: 2.5rem;
   display: flex;
-
   justify-content: center;
-
+  text-align: center;
+  flex-wrap: wrap;
 }
 
-.FormularioTitulo h1{
-  color:#000 !important;
+.FormularioTitulo h1 {
+  color: #000 !important;
   white-space: normal;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   font-weight: 500;
   text-align: center;
 }
+
 .Formulario h1 {
   font-size: 2.5rem;
   font-weight: 600;
@@ -41,6 +42,7 @@
   font-weight: 600;
   font-size: 15px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .Form input {
@@ -63,17 +65,22 @@
   font-weight: 600;
   display: block;
   border: none;
+  transition: background-color 0.3s ease;
 }
 
 .BotaoEnviar button:hover {
   background-color: #17a2b8;
 }
+
+/* Tablets */
 @media (max-width: 768px) {
-  .Formulario h1 {
+  .Formulario h1,
+  .FormularioTitulo h1,
+  .empresa-vagas h1 {
     font-size: 2rem;
     text-align: center;
+    padding: 0 1rem;
   }
- 
 
   .Form input,
   .Form textarea {
@@ -84,22 +91,38 @@
   .BotaoEnviar button {
     width: 100%;
   }
-  .AstronautaEditar img{
+
+  .AstronautaEditar img {
     width: 18rem;
-    margin-top: 1rem !important;}
+    margin: 1rem auto 0 auto;
+    display: block;
+  }
 }
 
+/* Celulares */
 @media (max-width: 576px) {
-  .Formulario h1 {
+  .Formulario h1,
+  .FormularioTitulo h1,
+  .empresa-vagas h1 {
     font-size: 1.6rem;
+    padding: 0 1rem;
   }
 
-  .Form input {
+  .Form input,
+  .Form textarea {
     font-size: 13.5px;
+    padding: 8px;
   }
 
   .BotaoEnviar button {
     font-size: 1rem;
     height: 3.2rem;
+  }
+
+  .AstronautaEditar img {
+    width: 100%;
+    max-width: 17rem;
+    margin: 1rem auto 0 auto;
+    display: block;
   }
 }

@@ -1,0 +1,200 @@
+/* Estilos gerais */
+.alunoContainer {
+  padding: 2rem 1rem 4rem;
+  position: relative;
+  min-height: calc(100vh - 80px); /* Garante que o container ocupe a altura total abaixo do header */
+  margin-top: 10rem; /* Altura do header */
+  color: white;
+}
+
+/* Títulos */
+.formTitle {
+  color: white;
+  margin: 2rem 0;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.sectionTitle {
+  color: white;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+}
+
+/* Mensagens */
+.message {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.message.success {
+  background-color: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.message.error {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.message.warning {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid #ffc107;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background-color: #343a40;
+  border-radius: 0.5rem;
+  width: 90%;
+  max-width: 500px;
+  padding: 1.5rem;
+  position: relative;
+  color: white;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  cursor: pointer;
+  color: white;
+}
+
+.modalBody p {
+  margin: 0;
+}
+
+/* Cards de vagas */
+.vagaCard {
+  background-color: #343a40;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.vagaCard h4 {
+  color: #17a2b8;
+  margin-bottom: 1rem;
+}
+
+.vagaCard ul {
+  padding-left: 1.5rem;
+}
+
+.vagaCard li {
+  margin-bottom: 0.5rem;
+}
+
+/* Formulário */
+.formContainer {
+  background-color: #343a40;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.formInput {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #495057;
+  background-color: #212529;
+  color: white;
+}
+
+.button {
+  background-color: #148a9d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0d6e7d;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .alunoContainer {
+    padding: 1rem 0.5rem 3rem;
+    margin-top: 60px; /* Ajuste para header menor em mobile */
+  }
+
+  .formTitle {
+    font-size: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .vagaCard {
+    padding: 1rem;
+  }
+
+  .formContainer {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .alunoContainer {
+    padding: 1rem 0.25rem 2rem;
+  }
+
+  .formTitle {
+    font-size: 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .sectionTitle {
+    font-size: 1.25rem;
+  }
+
+  .vagaCard {
+    padding: 0.75rem;
+  }
+
+  .formContainer {
+    padding: 1rem;
+  }
+}
+
+/* Ajuste para o modal em telas pequenas */
+@media (max-width: 400px) {
+  .modalContent {
+    width: 95%;
+    padding: 1rem;
+  }
+}

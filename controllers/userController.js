@@ -6,13 +6,20 @@ const SECRET = process.env.JWT_SECRET || 'secreto'
 
 // Gera token JWT
 function generateToken(user, tipo) {
-  return jwt.sign({
-    id: tipo === 'aluno' ? user.matricula : user.id,
-    email: user.email || user.email_empresa,
+  const payload = {
+    id: tipo === 'aluno' ? user.id_aluno : user.id,
+    email: tipo === 'aluno' ? user.email : user.email_empresa,
     tipo,
-    nome: user.nome_aluno || user.nome_empresa
-  }, SECRET, { expiresIn: '1h' })
+    nome: tipo === 'aluno' ? user.nome_aluno : user.nome_empresa
+  }
+
+  if (tipo === 'aluno') {
+    payload.matricula = user.matricula
+  }
+
+  return jwt.sign(payload, SECRET, { expiresIn: '1h' })
 }
+
 
 // Login
 export async function login(req, res) {
@@ -100,14 +107,5 @@ export async function cadastro(req, res) {
     res.status(500).json(err.message)
   }
 }
-const router = express.Router()
 
-// Adicione suporte a OPTIONS para /user/me
-router.options('/user/me', cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}))
 
-router.get('/user/me', getUsuarioLogado)
-
-export default router
