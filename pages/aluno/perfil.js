@@ -138,19 +138,13 @@ export default function AlunoVagas() {
               transition={{ duration: 0.8 }}
               className="row align-items-start mb-5"
             >
-              <div className="col-md-4 d-flex justify-content-start">
-                <img 
-                  src="/Astronautas/AstronautaVaga.png" 
-                  alt="vaga" 
-                  style={{ width: '25rem', height: 'auto', marginTop:'16rem' }} 
-                />
-              </div>
+          
 
-              <div className="col-md-8 -flex justify-content-end"
+              <div className="col-md-6 -flex justify-content-end"
               style={{ marginTop:'12rem'}}>
                 <div className="bg-dark text-white mb-3 p-4 rounded">
                   <h2 className="mb-4 FormularioTitulo">Vaga Selecionada</h2>
-                  <div className="card bg-dark text-white p-3">
+                  <div className="card bg-white text-black p-3">
                     <h4>{vaga.titulo}</h4>
                     <p>{vaga.descricao}</p>
                     <p><strong>Área:</strong> {vaga.area}</p>
@@ -163,6 +157,13 @@ export default function AlunoVagas() {
                     <ul>{vaga.requisitos.map((r, i) => <li key={i}>{r}</li>)}</ul>
                   </div>
                 </div>
+              </div>
+              <div className="col-md-6 d-flex justify-content-start">
+                <img 
+                  src="/Astronautas/AstronautaAluno.png" 
+                  alt="vaga" 
+                  style={{ width: '25rem', height: 'auto', marginTop:'14rem', marginLeft:'8rem' }} 
+                />
               </div>
             </motion.div>
           </>
@@ -213,7 +214,7 @@ export default function AlunoVagas() {
                   <div className="col-md-12 BotaoEnviar">
                     <button 
                       type="submit" 
-                      className="btn btn-primary"
+                      className="btn btn"
                       style={{ backgroundColor: '#148a9d', borderColor: '#148a9d' }}
                     >
                       Inscrever-se
